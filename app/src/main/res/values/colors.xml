@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background_color">#C8DCDC</color>
     <color name="text_color">#6496FA</color>
+    <color name="enter_value_background_color">#DCDCDC</color>
 </resources>

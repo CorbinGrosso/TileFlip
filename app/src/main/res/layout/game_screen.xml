@@ -3,8 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment>
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="512dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/background_color"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false" />
 
-    </fragment>
+    <RelativeLayout
+        android:id="@+id/gameboard_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/background_color"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

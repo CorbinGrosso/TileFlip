@@ -1,147 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TitleScreenActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.TileFlip.AppBarOverlay">
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <RelativeLayout
         android:id="@+id/parent_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/background_color" />
-
-
-
-<!--    <include layout="@layout/content_main" />-->
-
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical"-->
-<!--        android:background="@color/background_color">-->
-
-<!--        &lt;!&ndash; Title &ndash;&gt;-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="500dp"-->
-<!--            android:textSize="64sp"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="100dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:text="@string/app_name" />-->
-
-<!--        &lt;!&ndash; Decorative Tile &ndash;&gt;-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageTitleScreenTile"-->
-<!--            android:contentDescription="@string/title_screen_tile_desc"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="200dp"-->
-<!--            app:srcCompat="@drawable/tile" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenTile"-->
-<!--            android:text="@string/val_unknown"-->
-<!--            android:textSize="32sp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="210dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:layout_height="wrap_content" />-->
-
-<!--        &lt;!&ndash; Start Button &ndash;&gt;-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageTitleScreenStartButton"-->
-<!--            android:contentDescription="@string/start_button_desc"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="300dp"-->
-<!--            app:srcCompat="@drawable/title_screen_button" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenStartButton"-->
-<!--            android:text="@string/start_button"-->
-<!--            android:textSize="32sp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="310dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:layout_height="wrap_content" />-->
-
-<!--        &lt;!&ndash; High Scores Button &ndash;&gt;-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageTitleScreenHighScoresButton"-->
-<!--            android:contentDescription="@string/high_scores_button_desc"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="410dp"-->
-<!--            app:srcCompat="@drawable/title_screen_button" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenHighScoresButton"-->
-<!--            android:text="@string/high_scores_button"-->
-<!--            android:textSize="32sp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="420dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:layout_height="wrap_content" />-->
-
-<!--        &lt;!&ndash; How to Play Button &ndash;&gt;-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageTitleScreenHowToPlayButton"-->
-<!--            android:contentDescription="@string/how_to_play_button_desc"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="500dp"-->
-<!--            app:srcCompat="@drawable/title_screen_button" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenHowToPlayButton"-->
-<!--            android:text="@string/how_to_play_button"-->
-<!--            android:textSize="32sp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="510dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:layout_height="wrap_content" />-->
-
-<!--        &lt;!&ndash; Options Button &ndash;&gt;-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageTitleScreenOptionsButton"-->
-<!--            android:contentDescription="@string/options_button_desc"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="600dp"-->
-<!--            app:srcCompat="@drawable/title_screen_button" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/textTitleScreenOptionsButton"-->
-<!--            android:text="@string/options_button"-->
-<!--            android:textSize="32sp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="610dp"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:layout_height="wrap_content" />-->
-<!--    </RelativeLayout>-->
+        android:background="@color/background_color"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
