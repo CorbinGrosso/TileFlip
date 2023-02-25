@@ -6,12 +6,21 @@
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="512dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:background="@color/background_color"
         android:fitsSystemWindows="true"
-        android:clipToPadding="false" />
+        android:clipToPadding="false">
+        <TextView
+            android:id="@+id/total_score_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/round_score_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/gameboard_layout"
@@ -19,7 +28,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:background="@color/background_color"
         android:fitsSystemWindows="true"
         android:clipToPadding="false" />
 

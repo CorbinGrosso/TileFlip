@@ -1,5 +1,6 @@
 package com.myproject.tileflip;
 
+import java.io.IOException;
 import java.util.Random;
 
 import android.content.Context;
@@ -14,24 +15,38 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
 public class Board {
 
-    private Tile[][] tiles;
-    private int[] colSums, rowSums, colBombs, rowBombs;
-    private int size;
+    private final Tile[][] tiles;
+    private final int[] colSums, rowSums, colBombs, rowBombs;
+    private final int boardSize, spaceBetweenTiles, hPipeOffsetLeft, height;
+    private int tileSize, maxScore = 1;
+    private RelativeLayout parentLayout;
 
-    public Board(int size, int maxValue) {
+    public Board(GameScreenActivity activity, RelativeLayout parentLayout, Context context, int boardSize, int maxValue, int height) throws JSONException, IOException {
 
-        tiles = new Tile[size][size];
+        tiles = new Tile[boardSize][boardSize];
         Random rand = new Random();
-        colSums = new int[size];
-        rowSums = new int[size];
-        colBombs = new int[size];
-        rowBombs = new int[size];
-        this.size = size;
+        colSums = new int[boardSize];
+        rowSums = new int[boardSize];
+        colBombs = new int[boardSize];
+        rowBombs = new int[boardSize];
+        this.boardSize = boardSize;
+        this.height = height;
+        this.parentLayout = parentLayout;
+
+        if (boardSize == 3) {
+            tileSize = 192;
+        } else if (boardSize >= 4) {
+            tileSize = 128;
+        }
+        spaceBetweenTiles = (int)(tileSize * 1.25);
+        hPipeOffsetLeft = (int)(tileSize * 0.5);
 
         // initialize arrays to all 0s
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < boardSize; i++) {
             colSums[i] = 0;
             rowSums[i] = 0;
             colBombs[i] = 0;
@@ -40,8 +55,8 @@ public class Board {
 
         // set up arraylist of values to use for the tiles
         ArrayList<Integer> tileVals = new ArrayList<Integer>();
-        for (int i = 0; i < size * size; i++) {
-            if (i < size * size / 3) {
+        for (int i = 0; i < boardSize * boardSize; i++) {
+            if (i < boardSize * boardSize / 3) {
                 tileVals.add(0);
             } else {
                 tileVals.add(rand.nextInt(maxValue + 1));
@@ -49,20 +64,28 @@ public class Board {
         }
 
         // Create tiles to populate board
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        // Also calculate totals like bomb counts and max score
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
                 int randVal = rand.nextInt(tileVals.size());
                 int tileVal = tileVals.get(randVal);
                 tileVals.remove(randVal);
-                tiles[i][j] = new Tile(tileVal);
+                tiles[i][j] = new Tile(activity, parentLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
                 rowSums[i] += tileVal;
                 colSums[j] += tileVal;
                 if (tileVal == 0) {
                     rowBombs[i] += 1;
                     colBombs[j] += 1;
+                } else {
+                    maxScore *= tileVal;
                 }
             }
         }
+
+        GameDataHandler gdh = null;
+        gdh = new GameDataHandler(context);
+        System.out.println("The max score is " + maxScore);
+        gdh.storeData(context);
     }
 
     public int getRowSum(int rowNum) {
@@ -73,100 +96,92 @@ public class Board {
         return colSums[colNum];
     }
 
-    public void draw(RelativeLayout parentLayout, Context context) {
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void draw(Context context) {
+
         ImageView img;
         RelativeLayout.LayoutParams layoutParams;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+
+        // Draw all of the Tile Connectors
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
 
                 // Tile Connector Horizontal Image
                 img = new ImageView(context);
                 img.setImageResource(R.drawable.tile_connector_horizontal);
-                layoutParams = new RelativeLayout.LayoutParams(128, 128);
-                layoutParams.setMargins(160 * j + 80 + 32, 160 * i + 384, 0, 0);
+                layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+                layoutParams.setMargins(spaceBetweenTiles * j + hPipeOffsetLeft, spaceBetweenTiles * i + height, 0, 0);
                 img.setLayoutParams(layoutParams);
                 parentLayout.addView(img);
 
                 // Tile Connector Vertical Image
                 img = new ImageView(context);
                 img.setImageResource(R.drawable.tile_connector_vertical);
-                layoutParams = new RelativeLayout.LayoutParams(128, 128);
-                layoutParams.setMargins(160 * j + 32, 160 * i + 80 + 384, 0, 0);
+                layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+                layoutParams.setMargins(spaceBetweenTiles * j, spaceBetweenTiles * i + hPipeOffsetLeft + height, 0, 0);
                 img.setLayoutParams(layoutParams);
                 parentLayout.addView(img);
             }
         }
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+
+        // Draw all of the Tiles and Description Tiles
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
 
                 // Tile Image and Text
-                this.tiles[i][j].draw(parentLayout, context.getApplicationContext(), 32 + 160 * j, 160 * i + 384);
+                this.tiles[i][j].draw();
             }
 
-            // Row Description Boxes
-            img = new ImageView(context);
-            img.setImageResource(R.drawable.description_tile);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * size + 32, 160 * i + 384, 0, 0);
-            img.setLayoutParams(layoutParams);
-            parentLayout.addView(img);
+            // Draw Row Description Tile
+            drawDescriptionTile(context, spaceBetweenTiles * boardSize, spaceBetweenTiles * i + height, tileSize, rowSums[i], rowBombs[i]);
 
-            // Row Sums
-            TextView text = new TextView(context);
-            String rowSum = "" + rowSums[i];
-            text.setText(rowSum);
-            text.setTextSize(16);
-            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.END);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * size + 16, 160 * i + 384, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
+            // Draw Column Description Tile
+            drawDescriptionTile(context, spaceBetweenTiles * i, spaceBetweenTiles * boardSize + height, tileSize, colSums[i], colBombs[i]);
 
-            // Row Bombs
-            text = new TextView(context);
-            String rowBomb = "" + rowBombs[i];
-            text.setText(rowBomb);
-            text.setTextSize(16);
-            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.END);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * size + 16, 160 * i + 384 + 56, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
-
-            // Column Description Boxes
-            img = new ImageView(context);
-            img.setImageResource(R.drawable.description_tile);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * i + 32, 160 * size + 384, 0, 0);
-            img.setLayoutParams(layoutParams);
-            parentLayout.addView(img);
-
-            // Column Sums
-            text = new TextView(context);
-            String colSum = "" + colSums[i];
-            text.setText(colSum);
-            text.setTextSize(16);
-            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.END);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * i + 16, 160 * size + 384, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
-
-            // Column Bombs
-            text = new TextView(context);
-            String colBomb = "" + colBombs[i];
-            text.setText(colBomb);
-            text.setTextSize(16);
-            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.END);
-            layoutParams = new RelativeLayout.LayoutParams(128, 128);
-            layoutParams.setMargins(160 * i + 16, 160 * size + 384 + 56, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
         }
+    }
+
+    private void drawDescriptionTile(Context context, int x, int y, int tileSize, int sum, int bombs) {
+
+        int textSize = (int) (tileSize * 0.125);
+        // Description Box Image
+        ImageView img = new ImageView(context);
+        img.setImageResource(R.drawable.description_tile);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+        layoutParams.setMargins(x, y, 0, 0);
+        img.setLayoutParams(layoutParams);
+        parentLayout.addView(img);
+
+        // Sums Text
+        TextView text = new TextView(context);
+        text.setTextSize(textSize);
+        text.setTextColor(context.getResources().getColor(R.color.text_color, null));
+        text.setGravity(Gravity.END);
+        String colSum = "" + sum;
+        text.setText(colSum);
+        layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+        layoutParams.setMargins(x - 32, y, 0, 0);
+        text.setLayoutParams(layoutParams);
+        parentLayout.addView(text);
+
+        // Bombs Text
+        text = new TextView(context);
+        text.setTextSize(textSize);
+        text.setTextColor(context.getResources().getColor(R.color.text_color, null));
+        text.setGravity(Gravity.END);
+        String colBomb = "" + bombs;
+        text.setText(colBomb);
+        layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+        layoutParams.setMargins(x - 32, y + (int)(tileSize * 0.5), 0, 0);
+        text.setLayoutParams(layoutParams);
+        parentLayout.addView(text);
+    }
+
+    public void destroy(RelativeLayout parentLayout) {
+        parentLayout.removeAllViews();
     }
 }
 

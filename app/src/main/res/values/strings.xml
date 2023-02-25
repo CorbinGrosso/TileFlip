@@ -18,5 +18,12 @@
     <!-- Strings used for the Game Board -->
     <string name="scoreboard_total">Total Score: </string>
     <string name="scoreboard_round">Round Score: </string>
+    <string name="board_cleared">You cleared\nthe whole board!</string>
+
+    <!-- Strings used for the Game Over Screen -->
+    <string name="game_over">Game Over!</string>
+    <string name="score_text">Score:\ </string>
+    <string name="play_again">Play\nAgain</string>
+    <string name="main_menu">Main\nMenu</string>
 
 </resources>

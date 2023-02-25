@@ -13,8 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class OptionsDataHandler extends DataHandler{
-    private int boardSize = 3;
-    private int highestValueMultiplier = 3;
+    private int boardSize = 3, highestValueMultiplier = 3;
+    private final String filename = "options", boardSizeString = "Board Size", highestValueMultiplierString = "Highest Value Multiplier";
 
     public OptionsDataHandler(Context context) throws JSONException, IOException {
         loadData(context);
@@ -39,39 +39,27 @@ public class OptionsDataHandler extends DataHandler{
     public void loadData(@NonNull Context context) throws IOException, JSONException {
 
         JSONObject jsonObject;
-        File f = new File(context.getFilesDir(), "options");
+        File f = new File(context.getFilesDir(), filename);
         if (f.exists()) {
-            jsonObject = super.getDataFromFile(context, "options");
+            jsonObject = super.getDataFromFile(context, filename);
         } else {
             jsonObject = this.setValues();
         }
 
         // Read in the values from JSON
-        this.boardSize = jsonObject.getInt("Board Size");
+        this.boardSize = jsonObject.getInt(boardSizeString);
 
-        this.highestValueMultiplier = jsonObject.getInt("Highest Value Multiplier");
+        this.highestValueMultiplier = jsonObject.getInt(highestValueMultiplierString);
     }
 
     public void storeData(@NonNull Context context) throws JSONException, IOException {
-
-        // create JSON object with current values
-        JSONObject json = this.setValues();
-
-        // Turn JSON object into string to be written to file
-        String jsonString = json.toString();
-
-        // Open file and write to it
-        File f = new File(context.getFilesDir(),"options");
-        FileWriter fw = new FileWriter(f);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(jsonString);
-        bw.close();
+        super.storeData(context, this.setValues(),filename);
     }
 
     public JSONObject setValues() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("Board Size", this.boardSize);
-        json.put("Highest Value Multiplier", this.highestValueMultiplier);
+        json.put(boardSizeString, this.boardSize);
+        json.put(highestValueMultiplierString, this.highestValueMultiplier);
         return json;
     }
 }

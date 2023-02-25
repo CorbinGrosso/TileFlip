@@ -14,19 +14,27 @@ import java.io.IOException;
 
 public class StatisticsDataHandler extends DataHandler{
 
-    private int boardsCleared = 0;
+    private int boardsCleared = 0, mostRecentScore = 0;
     private int[] scores = {0,0,0,0,0,0,0,0,0,0};
+    private final String filename = "statistics",
+            scoresString = "Score",
+            boardsClearedString = "Boards Cleared",
+            mostRecentScoreString = "Most Recent Score";
 
     public StatisticsDataHandler(Context context) throws JSONException, IOException {
         loadData(context);
     }
 
     public int getBoardsCleared() {
-        return this.boardsCleared;
+        return boardsCleared;
     }
 
     public int[] getScores() {
-        return this.scores;
+        return scores;
+    }
+
+    public int getMostRecentScore() {
+        return mostRecentScore;
     }
 
     public void setBoardsCleared(int boardsCleared) {
@@ -37,46 +45,41 @@ public class StatisticsDataHandler extends DataHandler{
         this.scores = scores;
     }
 
+    public void setMostRecentScore(int val) {
+        mostRecentScore = val;
+    }
+
     public void loadData(@NonNull Context context) throws IOException, JSONException {
 
         JSONObject jsonObject;
-        File f = new File(context.getFilesDir(), "statistics");
+        File f = new File(context.getFilesDir(), filename);
         if (f.exists()) {
-            jsonObject = super.getDataFromFile(context, "statistics");
+            jsonObject = super.getDataFromFile(context, filename);
         } else {
             jsonObject = this.setValues();
         }
 
         // Read in the values from JSON
-        this.boardsCleared = jsonObject.getInt("Boards Cleared");
+        boardsCleared = jsonObject.getInt(boardsClearedString);
 
         for (int i = 0; i < 10; i++) {
-            this.scores[i] = jsonObject.getInt("score" + (i+1));
+            scores[i] = jsonObject.getInt(scoresString + (i+1));
         }
+
+        mostRecentScore = jsonObject.getInt(mostRecentScoreString);
     }
 
     public void storeData(@NonNull Context context) throws JSONException, IOException {
-
-        // create JSON object with current values
-        JSONObject json = this.setValues();
-
-        // Turn JSON object into string to be written to file
-        String jsonString = json.toString();
-
-        // Open file and write to it
-        File f = new File(context.getFilesDir(),"statistics");
-        FileWriter fw = new FileWriter(f);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(jsonString);
-        bw.close();
+        super.storeData(context, this.setValues(), filename);
     }
 
     public JSONObject setValues() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("Boards Cleared", this.boardsCleared);
+        json.put(boardsClearedString, boardsCleared);
         for (int i = 0; i < 10; i++) {
-            json.put("score" + (i+1), this.scores[i]);
+            json.put(scoresString + (i+1), scores[i]);
         }
+        json.put(mostRecentScoreString, mostRecentScore);
         return json;
     }
 }
