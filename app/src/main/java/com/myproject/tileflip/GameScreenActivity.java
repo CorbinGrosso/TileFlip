@@ -1,8 +1,6 @@
 package com.myproject.tileflip;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -30,7 +27,7 @@ public class GameScreenActivity extends AppCompatActivity {
         totalScore = 0;
         roundScore = 0;
         gameBoardLayout = findViewById(R.id.gameboard_layout);
-        GameDataHandler gdh = null;
+        GameDataHandler gdh;
         try {
             gdh = new GameDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {
@@ -60,7 +57,7 @@ public class GameScreenActivity extends AppCompatActivity {
     private void drawScoreboard() {
 
         // Creating the layout
-        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.title_layout);
+        RelativeLayout titleLayout = findViewById(R.id.title_layout);
 
         // Total Score Text
         TextView text = new TextView(this);
@@ -137,7 +134,7 @@ public class GameScreenActivity extends AppCompatActivity {
     }
 
     private void drawGameBoard() throws JSONException, IOException {
-        OptionsDataHandler odh = null;
+        OptionsDataHandler odh;
         try {
             odh = new OptionsDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {

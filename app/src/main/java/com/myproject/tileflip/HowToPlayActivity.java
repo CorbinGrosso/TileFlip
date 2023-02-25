@@ -1,16 +1,12 @@
 package com.myproject.tileflip;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class HowToPlayActivity extends AppCompatActivity {
@@ -24,7 +20,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         // Creating the layout
-        RelativeLayout parentLayout = (RelativeLayout) findViewById(R.id.parent_layout);
+        RelativeLayout parentLayout = findViewById(R.id.parent_layout);
 
         // Title
         TextView text = new TextView(this);

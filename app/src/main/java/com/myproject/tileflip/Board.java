@@ -4,12 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import java.util.ArrayList;
-import android.graphics.Canvas;
-import android.graphics.RectF;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -82,18 +77,10 @@ public class Board {
             }
         }
 
-        GameDataHandler gdh = null;
+        GameDataHandler gdh;
         gdh = new GameDataHandler(context);
         System.out.println("The max score is " + maxScore);
         gdh.storeData(context);
-    }
-
-    public int getRowSum(int rowNum) {
-        return rowSums[rowNum];
-    }
-
-    public int getColSums(int colNum) {
-        return colSums[colNum];
     }
 
     public int getMaxScore() {

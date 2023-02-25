@@ -1,8 +1,6 @@
 package com.myproject.tileflip;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -30,8 +27,8 @@ public class GameOverScreenActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         // Creating the layout
-        titleLayout = (RelativeLayout) findViewById(R.id.title_layout);
-        buttonLayout = (RelativeLayout) findViewById(R.id.button_layout);
+        titleLayout = findViewById(R.id.title_layout);
+        buttonLayout = findViewById(R.id.button_layout);
 
         drawTitle();
 

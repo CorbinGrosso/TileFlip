@@ -1,17 +1,10 @@
 package com.myproject.tileflip;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class Tile {
 

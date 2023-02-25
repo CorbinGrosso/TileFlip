@@ -1,18 +1,12 @@
 package com.myproject.tileflip;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -25,7 +19,7 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statistics_screen);
 
-        StatisticsDataHandler sdh = null;
+        StatisticsDataHandler sdh;
         try {
             sdh = new StatisticsDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {
@@ -37,7 +31,7 @@ public class StatisticsActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         // Creating the layout
-        RelativeLayout parentLayout = (RelativeLayout) findViewById(R.id.parent_layout);
+        RelativeLayout parentLayout = findViewById(R.id.parent_layout);
 
         // Title
         TextView text = new TextView(this);
