@@ -22,11 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameScreenActivity"></activity>
-        <activity android:name=".GameOverScreenActivity"></activity>
-        <activity android:name=".StatisticsActivity"></activity>
-        <activity android:name=".HowToPlayActivity"></activity>
-        <activity android:name=".OptionsActivity"></activity>
+        <activity android:name=".GameScreenActivity" />
+        <activity android:name=".GameOverScreenActivity" />
+        <activity android:name=".StatisticsActivity" />
+        <activity android:name=".HowToPlayActivity" />
+        <activity android:name=".OptionsActivity" />
     </application>
 
 </manifest>
