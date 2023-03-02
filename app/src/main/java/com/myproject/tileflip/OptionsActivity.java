@@ -63,12 +63,12 @@ public class OptionsActivity extends AppCompatActivity {
         // Allow for user to alter the value of the option
         EditText editText = new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER); // This sets the input type to be numeric
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new BoardSizeInputFilter()});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new OptionsInputFilter(3, 5)});
         String boardSizeValue = "" + odh.getBoardSize();
         editText.setText(boardSizeValue);
         editText.setTextSize(32);
         editText.setTextColor(getResources().getColor(R.color.text_color, null));
-        editText.addTextChangedListener(new BoardSizeWatcher(getApplicationContext()));
+        editText.addTextChangedListener(new OptionsWatcher(getApplicationContext(), "boardSize"));
         editText.setBackgroundColor(getResources().getColor(R.color.enter_value_background_color, null));
         editText.setGravity(Gravity.CENTER);
         layoutParams = new RelativeLayout.LayoutParams(64, 144);
@@ -90,12 +90,12 @@ public class OptionsActivity extends AppCompatActivity {
         // Allow for user to alter the value of the option
         editText = new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER); // This sets the input type to be numeric
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new HighestValueMultiplierInputFilter()});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new OptionsInputFilter(3, 7)});
         String highestValueMultiplierValue = "" + odh.getHighestValueMultiplier();
         editText.setText(highestValueMultiplierValue);
         editText.setTextSize(32);
         editText.setTextColor(getResources().getColor(R.color.text_color, null));
-        editText.addTextChangedListener(new HighestValueMultiplierWatcher(getApplicationContext()));
+        editText.addTextChangedListener(new OptionsWatcher(getApplicationContext(), "highestValueMultiplier"));
         editText.setBackgroundColor(getResources().getColor(R.color.enter_value_background_color, null));
         editText.setGravity(Gravity.CENTER);
         layoutParams = new RelativeLayout.LayoutParams(64, 144);

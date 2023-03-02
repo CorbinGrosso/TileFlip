@@ -8,13 +8,16 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class HighestValueMultiplierWatcher implements TextWatcher {
+public class OptionsWatcher implements TextWatcher {
 
     private Context context;
+    private String var;
 
-    public HighestValueMultiplierWatcher(Context context) {
+    public OptionsWatcher(Context context, String var) {
         this.context = context;
+        this.var = var;
     }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         // This method is called before the text is changed
@@ -35,7 +38,11 @@ public class HighestValueMultiplierWatcher implements TextWatcher {
             } catch (JSONException | IOException e) {
                 throw new RuntimeException(e);
             }
-            odh.setHighestValueMultiplier(Integer.parseInt(s.toString()));
+            if (var.equals("boardSize")) {
+                odh.setBoardSize(Integer.parseInt(s.toString()));
+            } else if (var.equals("highestValueMultiplier")) {
+                odh.setHighestValueMultiplier(Integer.parseInt(s.toString()));
+            }
             try {
                 odh.storeData(context);
             } catch (JSONException | IOException e) {
