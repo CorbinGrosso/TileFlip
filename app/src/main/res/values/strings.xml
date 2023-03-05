@@ -19,6 +19,8 @@
     <string name="scoreboard_total">Total Score: </string>
     <string name="scoreboard_round">Round Score: </string>
     <string name="board_cleared">You cleared\nthe whole board!</string>
+    <string name="toolbox">Toolbox</string>
+    <string name="flip_button">Flip</string>
 
     <!-- Strings used for the Game Over Screen -->
     <string name="game_over">Game Over!</string>

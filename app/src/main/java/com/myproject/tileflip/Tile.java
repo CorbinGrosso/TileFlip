@@ -2,6 +2,7 @@ package com.myproject.tileflip;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +14,9 @@ public class Tile {
     private final RelativeLayout parentLayout;
     private final Context context;
     private final GameScreenActivity activity;
+    private final boolean[] memos = {false, false, false, false, false, false, false, false};
+    private final int[] memoIDs = {View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(),
+            View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId()};
 
     public Tile(GameScreenActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
         this.activity = activity;
@@ -33,8 +37,56 @@ public class Tile {
     }
 
     public void reveal() {
-        this.isFaceDown = false;
-        this.draw();
+        isFaceDown = false;
+        removeAllMemos();
+        draw();
+    }
+
+    public void toggleMemo(int val) {
+        memos[val] = !memos[val];
+        if (memos[val]) {
+            // set text size and margin offsets
+            int textSize = (int)(tileSize * 3/32);
+            int vOffset = 0, hOffset = 0;
+            if (val < 3) {
+                hOffset = tileSize / 3 * val;
+            } else if (val == 3) {
+                hOffset = tileSize * 2 / 3;
+                vOffset = tileSize / 3;
+            } else if (val == 4) {
+                hOffset = tileSize * 2 / 3;
+                vOffset = tileSize * 2 / 3;
+            } else if (val == 5) {
+                hOffset = tileSize / 3;
+                vOffset = tileSize * 2 / 3;
+            } else if (val == 6) {
+                vOffset = tileSize * 2 / 3;
+            } else if (val == 7) {
+                vOffset = tileSize / 3;
+            }
+
+            // Place text on the tile
+            TextView text = new TextView(context);
+            String valString = "" + val;
+            text.setText(valString);
+            text.setTextSize(textSize);
+            text.setId(memoIDs[val]);
+            text.setTextColor(context.getResources().getColor(R.color.memo_color, null));
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+            layoutParams.setMargins(x + hOffset + 12, y + vOffset, 0, 0);
+            text.setLayoutParams(layoutParams);
+            parentLayout.addView(text);
+        } else {
+            parentLayout.removeView(activity.findViewById(memoIDs[val]));
+        }
+    }
+
+    private void removeAllMemos() {
+        for (int i = 0; i < memos.length; i++) {
+            if (memos[i]) {
+                toggleMemo(i);
+            }
+        }
     }
 
     public void draw() {

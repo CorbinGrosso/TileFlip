@@ -25,16 +25,20 @@ public class OptionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options_screen);
 
+        // Hide navigation bar
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new NavVisibilityListener(this));
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
         OptionsDataHandler odh;
         try {
             odh = new OptionsDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {
             throw new RuntimeException(e);
         }
-
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
 
         // Creating the layout
         RelativeLayout parentLayout = findViewById(R.id.parent_layout);
