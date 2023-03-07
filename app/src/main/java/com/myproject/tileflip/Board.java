@@ -1,5 +1,7 @@
 package com.myproject.tileflip;
 
+import static java.lang.Math.floor;
+
 import java.io.IOException;
 import java.util.Random;
 
@@ -34,7 +36,9 @@ public class Board {
 
         if (boardSize == 3) {
             tileSize = 192;
-        } else if (boardSize >= 4) {
+        } else if (boardSize == 4) {
+            tileSize = 160;
+        } else if (boardSize == 5) {
             tileSize = 128;
         }
         spaceBetweenTiles = (int)(tileSize * 1.25);
@@ -51,10 +55,24 @@ public class Board {
         // set up arraylist of values to use for the tiles
         ArrayList<Integer> tileVals = new ArrayList<Integer>();
         for (int i = 0; i < boardSize * boardSize; i++) {
-            if (i < boardSize * boardSize / 3) {
+            // a third of the board is guaranteed to be bombs
+            if (i < floor(boardSize * boardSize / 3.0)) {
                 tileVals.add(0);
+            // up to half of the board can be bombs, with a lower chance of a bomb spawning
+            } else if (i < floor(boardSize * boardSize / 2.0)) {
+                int percent = 25; // 25% chance of a bomb
+                int randVal = rand.nextInt(100) + 1;
+                if (percent <= randVal) {
+                    tileVals.add(0);
+                } else {
+                    tileVals.add(rand.nextInt(maxValue) + 1);
+                }
+            // guarantees that at least one value is above 1
+            } else if (i < floor(boardSize * boardSize / 2.0) + 1) {
+                tileVals.add(rand.nextInt(maxValue - 1) + 2);
+            // the rest of the board is filled with multipliers
             } else {
-                tileVals.add(rand.nextInt(maxValue + 1));
+                tileVals.add(rand.nextInt(maxValue) + 1);
             }
         }
 

@@ -65,17 +65,27 @@ public class Tile {
                 vOffset = tileSize / 3;
             }
 
-            // Place text on the tile
-            TextView text = new TextView(context);
-            String valString = "" + val;
-            text.setText(valString);
-            text.setTextSize(textSize);
-            text.setId(memoIDs[val]);
-            text.setTextColor(context.getResources().getColor(R.color.memo_color, null));
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-            layoutParams.setMargins(x + hOffset + 12, y + vOffset, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
+            if (val > 0) {
+                // Place text on the tile
+                TextView text = new TextView(context);
+                String valString = "" + val;
+                text.setText(valString);
+                text.setTextSize(textSize);
+                text.setId(memoIDs[val]);
+                text.setTextColor(context.getResources().getColor(R.color.memo_color, null));
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+                layoutParams.setMargins(x + hOffset + 12, y + vOffset, 0, 0);
+                text.setLayoutParams(layoutParams);
+                parentLayout.addView(text);
+            } else {
+                ImageView img = new ImageView(context);
+                img.setImageResource(R.drawable.mini_bomb_memo_icon);
+                img.setId(memoIDs[val]);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(textSize * 4, textSize * 4);
+                layoutParams.setMargins(x, y, 0, 0);
+                img.setLayoutParams(layoutParams);
+                parentLayout.addView(img);
+            }
         } else {
             parentLayout.removeView(activity.findViewById(memoIDs[val]));
         }

@@ -182,7 +182,7 @@ public class GameScreenActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        board = new Board(this, gameBoardLayout, getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), 512);
+        board = new Board(this, gameBoardLayout, getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), 576);
 
         board.draw(getApplicationContext());
     }
@@ -338,14 +338,21 @@ public class GameScreenActivity extends AppCompatActivity {
         });
         memoLayout.addView(img);
 
-        TextView text = new TextView(this);
-        String textString = "" + val;
-        text.setText(textString);
-        text.setTextSize(24);
-        text.setGravity(Gravity.CENTER);
-        text.setTextColor(getColor(R.color.text_color));
-        text.setLayoutParams(layoutParams);
-        memoLayout.addView(text);
+        if (val > 0) {
+            TextView text = new TextView(this);
+            String textString = "" + val;
+            text.setText(textString);
+            text.setTextSize(24);
+            text.setGravity(Gravity.CENTER);
+            text.setTextColor(getColor(R.color.text_color));
+            text.setLayoutParams(layoutParams);
+            memoLayout.addView(text);
+        } else {
+            img = new ImageView(this);
+            img.setImageResource(R.drawable.bomb_memo_icon);
+            img.setLayoutParams(layoutParams);
+            memoLayout.addView(img);
+        }
     }
 
     private void drawFlipButton(int x, int y) {
