@@ -1,7 +1,10 @@
 package com.myproject.tileflip;
 
+import static java.lang.Math.min;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ public class GameScreenActivity extends AppCompatActivity {
     private int flipButtonID;
     private boolean[] memoIsSelected;
     private boolean flipButtonIsSelected = true;
+    private int screenWidth, screenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,12 @@ public class GameScreenActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        // get screen dimensions
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
 
         // set up layouts
         gameBoardLayout = findViewById(R.id.gameboard_layout);
@@ -100,14 +110,17 @@ public class GameScreenActivity extends AppCompatActivity {
         // Creating the layout
         RelativeLayout scoreboardLayout = findViewById(R.id.scoreboard_layout);
 
+        // calculating the text size
+        int textSize = (int)(screenHeight * 0.02);
+
         // Total Score Text
         TextView text = new TextView(this);
         text.setText(R.string.scoreboard_total);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.START);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 128, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
+        layoutParams.setMargins(0, 0, 0, 0);
         text.setLayoutParams(layoutParams);
         scoreboardLayout.addView(text);
 
@@ -115,21 +128,21 @@ public class GameScreenActivity extends AppCompatActivity {
         text = findViewById(R.id.total_score_value);
         String totalScoreText = "" + totalScore;
         text.setText(totalScoreText);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.END);
-        layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 128, 0, 0);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
+        layoutParams.setMargins(0, 0, 0, 0);
         text.setLayoutParams(layoutParams);
 
         // Round Score Text
         text = new TextView(this);
         text.setText(R.string.scoreboard_round);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.START);
-        layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 256, 0, 0);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
         text.setLayoutParams(layoutParams);
         scoreboardLayout.addView(text);
 
@@ -137,11 +150,11 @@ public class GameScreenActivity extends AppCompatActivity {
         text = findViewById(R.id.round_score_value);
         String roundScoreText = "" + roundScore;
         text.setText(roundScoreText);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.END);
-        layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 256, 0, 0);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
         text.setLayoutParams(layoutParams);
     }
 
@@ -182,7 +195,7 @@ public class GameScreenActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        board = new Board(this, gameBoardLayout, getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), 576);
+        board = new Board(this, gameBoardLayout, getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int)(screenHeight * 0.2));
 
         board.draw(getApplicationContext());
     }
@@ -194,14 +207,16 @@ public class GameScreenActivity extends AppCompatActivity {
     }
 
     private void drawAnnouncement(boolean win) {
+        // Announcement box
         ImageView img = new ImageView(getApplicationContext());
         img.setImageResource(R.drawable.title_screen_button);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(768, 192);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.2));
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         layoutParams.setMargins(0, 0, 0, 0);
         img.setLayoutParams(layoutParams);
         announcementLayout.addView(img);
 
+        // announcement text
         TextView text = new TextView(getApplicationContext());
         if (win) {
             text.setText(R.string.board_cleared);
@@ -217,8 +232,9 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setLayoutParams(layoutParams);
         announcementLayout.addView(text);
 
+        // button
         text = new TextView(getApplicationContext());
-        layoutParams = new RelativeLayout.LayoutParams(960, 1984);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
         text.setLayoutParams(layoutParams);
         if (win) {
             text.setOnClickListener(new View.OnClickListener() {
@@ -284,33 +300,37 @@ public class GameScreenActivity extends AppCompatActivity {
         OptionsDataHandler odh = new OptionsDataHandler(getApplicationContext());
         int highestValueMultiplier = odh.getHighestValueMultiplier();
 
+        // calculating the text size adn tile size
+        int textSize = (int)(screenHeight * 0.02);
+        int tileSize = min((int)(screenWidth / 8.0), (int)(screenHeight * 0.1));
+
         // Label the section of the screen as the Toolbox
         TextView text = new TextView(this);
         text.setText(R.string.toolbox);
         text.setTextColor(getColor(R.color.text_color));
-        text.setTextSize(32);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(386,128);
-        layoutParams.setMargins(0, 0, 0, 386);
+        text.setTextSize(textSize);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
+        layoutParams.setMargins(0, 0, 0, (int)(tileSize * 1.75 + textSize));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         text.setLayoutParams(layoutParams);
         memoLayout.addView(text);
 
         for (int i = 0; i < 4; i++) {
-            drawMemoButton(160 * i, 224, i);
+            drawMemoButton((int) (tileSize * i * 1.25 + tileSize * 0.25), (int)(tileSize * 1.5), i, tileSize);
         }
         for (int i = 4; i <= highestValueMultiplier; i++) {
-            drawMemoButton(160 * (i - 4), 64, i);
+            drawMemoButton((int) (tileSize * (i - 4) * 1.25 + tileSize * 0.25), (int)(tileSize * 0.25), i, tileSize);
         }
 
-        drawFlipButton(640, 64);
+        drawFlipButton((int)(tileSize * 1.25 * 4 + tileSize * 0.25), (int)(tileSize * 0.25), tileSize);
     }
 
-    private void drawMemoButton(int x, int y, int val) {
+    private void drawMemoButton(int x, int y, int val, int tileSize) {
 
         ImageView img = new ImageView(this);
         img.setId(memoIDs[val]);
         img.setImageResource(R.drawable.tile);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(128, 128);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
         layoutParams.setMargins(x, 0, 0, y);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
@@ -355,12 +375,12 @@ public class GameScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void drawFlipButton(int x, int y) {
+    private void drawFlipButton(int x, int y, int tileSize) {
         ImageView img = new ImageView(this);
         img.setId(flipButtonID);
         img.setImageResource(R.drawable.tile_flip_button_pressed);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(288, 288);
-        layoutParams.setMargins(x, 0, 64, y);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(tileSize * 2.25), (int)(tileSize * 2.25));
+        layoutParams.setMargins(x, 0, (int)(tileSize * 0.5), y);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {

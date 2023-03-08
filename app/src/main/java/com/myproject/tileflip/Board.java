@@ -1,12 +1,16 @@
 package com.myproject.tileflip;
 
 import static java.lang.Math.floor;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 import java.io.IOException;
 import java.util.Random;
 
 import android.content.Context;
 import java.util.ArrayList;
+
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,13 +38,18 @@ public class Board {
         this.height = height;
         this.parentLayout = parentLayout;
 
-        if (boardSize == 3) {
-            tileSize = 192;
-        } else if (boardSize == 4) {
-            tileSize = 160;
-        } else if (boardSize == 5) {
-            tileSize = 128;
-        }
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int boardScreenSize = min(displayMetrics.widthPixels, (int) (displayMetrics.heightPixels * 0.8));
+        tileSize = boardScreenSize / (boardSize + 3);
+//        if (boardSize == 3) {
+//            tileSize = 192;
+//        } else if (boardSize == 4) {
+//            tileSize = 160;
+//        } else if (boardSize == 5) {
+//            tileSize = 128;
+//        }
         spaceBetweenTiles = (int)(tileSize * 1.25);
         hPipeOffsetLeft = (int)(tileSize * 0.5);
 
@@ -97,7 +106,6 @@ public class Board {
 
         GameDataHandler gdh;
         gdh = new GameDataHandler(context);
-        System.out.println("The max score is " + maxScore);
         gdh.storeData(context);
     }
 
@@ -168,7 +176,7 @@ public class Board {
         String colSum = "" + sum;
         text.setText(colSum);
         layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-        layoutParams.setMargins(x - 32, y, 0, 0);
+        layoutParams.setMargins(x - (int)(tileSize * 0.1), y + (int)(tileSize * 0.15 - textSize), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 
@@ -180,7 +188,7 @@ public class Board {
         String colBomb = "" + bombs;
         text.setText(colBomb);
         layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-        layoutParams.setMargins(x - 32, y + (int)(tileSize * 0.5), 0, 0);
+        layoutParams.setMargins(x - (int)(tileSize * 0.1), y + (int)(tileSize * 0.65 - textSize), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
     }

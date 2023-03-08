@@ -46,7 +46,7 @@ public class Tile {
         memos[val] = !memos[val];
         if (memos[val]) {
             // set text size and margin offsets
-            int textSize = (int)(tileSize * 3/32);
+            int textSize = tileSize * 3 / 32;
             int vOffset = 0, hOffset = 0;
             if (val < 3) {
                 hOffset = tileSize / 3 * val;
@@ -81,7 +81,7 @@ public class Tile {
                 ImageView img = new ImageView(context);
                 img.setImageResource(R.drawable.mini_bomb_memo_icon);
                 img.setId(memoIDs[val]);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(textSize * 4, textSize * 4);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize / 3, tileSize / 3);
                 layoutParams.setMargins(x, y, 0, 0);
                 img.setLayoutParams(layoutParams);
                 parentLayout.addView(img);
