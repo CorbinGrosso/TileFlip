@@ -226,7 +226,8 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setGravity(Gravity.CENTER_HORIZONTAL);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setTextSize(24);
-        layoutParams = new RelativeLayout.LayoutParams(768, 192);
+        text.setGravity(Gravity.CENTER);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.2));
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         layoutParams.setMargins(0, 0, 0, 0);
         text.setLayoutParams(layoutParams);

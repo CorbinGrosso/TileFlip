@@ -2,6 +2,7 @@ package com.myproject.tileflip;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class GameOverScreenActivity extends AppCompatActivity {
 
     private RelativeLayout titleLayout, buttonLayout;
+    private int screenWidth, screenHeight, titleSize, scoreSize, buttonTextSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +33,20 @@ public class GameOverScreenActivity extends AppCompatActivity {
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+        // get screen dimensions
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
+
         // Creating the layout
         titleLayout = findViewById(R.id.title_layout);
         buttonLayout = findViewById(R.id.button_layout);
+
+        // calculating text sizes
+        titleSize = (int)(screenWidth * 0.075);
+        scoreSize = (int)(screenHeight * 0.03);
+        buttonTextSize = (int)(screenHeight * 0.02);
 
         drawTitle();
 
@@ -51,11 +65,11 @@ public class GameOverScreenActivity extends AppCompatActivity {
     private void drawTitle() {
         TextView text = new TextView(getApplicationContext());
         text.setGravity(Gravity.CENTER_HORIZONTAL);
-        text.setTextSize(64);
+        text.setTextSize(titleSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setText(R.string.game_over);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 64, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
         text.setLayoutParams(layoutParams);
         titleLayout.addView(text);
     }
@@ -67,11 +81,11 @@ public class GameOverScreenActivity extends AppCompatActivity {
 
         TextView text = new TextView(getApplicationContext());
         text.setGravity(Gravity.CENTER_HORIZONTAL);
-        text.setTextSize(48);
+        text.setTextSize(scoreSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setText(scoreString);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(960, 256);
-        layoutParams.setMargins(0, 512, 0, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.35), 0, 0);
         text.setLayoutParams(layoutParams);
         titleLayout.addView(text);
     }
@@ -79,8 +93,8 @@ public class GameOverScreenActivity extends AppCompatActivity {
     private void drawPlayAgainButton() {
         ImageView img = new ImageView(getApplicationContext());
         img.setImageResource(R.drawable.game_over_button);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(384, 384);
-        layoutParams.setMargins(0, 0, 512, 128);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.4), (int)(screenHeight * 0.4));
+        layoutParams.setMargins(0, 0, (int)(screenWidth * 0.45), (int)(screenHeight * 0.15));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +108,11 @@ public class GameOverScreenActivity extends AppCompatActivity {
 
         TextView text = new TextView(getApplicationContext());
         text.setTextColor(getResources().getColor(R.color.text_color, null));
-        text.setTextSize(32);
+        text.setTextSize(buttonTextSize);
         text.setText(R.string.play_again);
         text.setGravity(Gravity.CENTER);
-        layoutParams = new RelativeLayout.LayoutParams(384, 384);
-        layoutParams.setMargins(0, 0, 512, 128);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.4), (int)(screenHeight * 0.4));
+        layoutParams.setMargins(0, 0, (int)(screenWidth * 0.45), (int)(screenHeight * 0.15));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         text.setLayoutParams(layoutParams);
         buttonLayout.addView(text);
@@ -107,8 +121,8 @@ public class GameOverScreenActivity extends AppCompatActivity {
     private void drawMainMenuButton() {
         ImageView img = new ImageView(getApplicationContext());
         img.setImageResource(R.drawable.game_over_button);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(384, 384);
-        layoutParams.setMargins(512, 0, 0, 128);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.4), (int)(screenHeight * 0.4));
+        layoutParams.setMargins((int)(screenWidth * 0.45), 0, 0, (int)(screenHeight * 0.15));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {
@@ -122,11 +136,11 @@ public class GameOverScreenActivity extends AppCompatActivity {
 
         TextView text = new TextView(getApplicationContext());
         text.setTextColor(getResources().getColor(R.color.text_color, null));
-        text.setTextSize(32);
+        text.setTextSize(buttonTextSize);
         text.setText(R.string.main_menu);
         text.setGravity(Gravity.CENTER);
-        layoutParams = new RelativeLayout.LayoutParams(384, 384);
-        layoutParams.setMargins(512, 0, 0, 128);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.4), (int)(screenHeight * 0.4));
+        layoutParams.setMargins((int)(screenWidth * 0.45), 0, 0, (int)(screenHeight * 0.15));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         text.setLayoutParams(layoutParams);
         buttonLayout.addView(text);

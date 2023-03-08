@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +20,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class OptionsActivity extends AppCompatActivity {
-    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +33,12 @@ public class OptionsActivity extends AppCompatActivity {
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+        // get screen dimensions
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+
         OptionsDataHandler odh;
         try {
             odh = new OptionsDataHandler(getApplicationContext());
@@ -43,13 +49,18 @@ public class OptionsActivity extends AppCompatActivity {
         // Creating the layout
         RelativeLayout parentLayout = findViewById(R.id.parent_layout);
 
+        // calculating text sizes
+        int titleSize = (int)(screenWidth * 0.075);
+        int textSize = (int)(screenHeight * 0.02);
+
         // Title
         TextView text = new TextView(this);
         text.setText(R.string.options_button);
-        text.setTextSize(64);
+        text.setTextSize(titleSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(640, 256);
-        layoutParams.setMargins(0, 256, 0, 0);
+        text.setGravity(Gravity.CENTER_HORIZONTAL);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
@@ -57,10 +68,10 @@ public class OptionsActivity extends AppCompatActivity {
         // Display Board Size Option
         text = new TextView(this);
         text.setText(R.string.boardSizeOption);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
-        layoutParams = new RelativeLayout.LayoutParams(1024, 1024);
-        layoutParams.setMargins(32, 640, 0, 0);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.8));
+        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.2), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 
@@ -70,13 +81,13 @@ public class OptionsActivity extends AppCompatActivity {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new OptionsInputFilter(3, 5)});
         String boardSizeValue = "" + odh.getBoardSize();
         editText.setText(boardSizeValue);
-        editText.setTextSize(32);
+        editText.setTextSize(textSize);
         editText.setTextColor(getResources().getColor(R.color.text_color, null));
         editText.addTextChangedListener(new OptionsWatcher(getApplicationContext(), "boardSize"));
         editText.setBackgroundColor(getResources().getColor(R.color.enter_value_background_color, null));
         editText.setGravity(Gravity.CENTER);
-        layoutParams = new RelativeLayout.LayoutParams(64, 144);
-        layoutParams.setMargins(0, 640, 32, 0);
+        layoutParams = new RelativeLayout.LayoutParams(textSize * 3, textSize * 5);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.2), (int)(screenWidth * 0.05), 0);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         editText.setLayoutParams(layoutParams);
         parentLayout.addView(editText);
@@ -84,10 +95,10 @@ public class OptionsActivity extends AppCompatActivity {
         // Display Highest Value Multiplier Option
         text = new TextView(this);
         text.setText(R.string.highestValueMultiplierOption);
-        text.setTextSize(32);
+        text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
-        layoutParams = new RelativeLayout.LayoutParams(1024, 1024);
-        layoutParams.setMargins(32, 864, 0, 0);
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.8));
+        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.35), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 
@@ -97,13 +108,13 @@ public class OptionsActivity extends AppCompatActivity {
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1), new OptionsInputFilter(3, 7)});
         String highestValueMultiplierValue = "" + odh.getHighestValueMultiplier();
         editText.setText(highestValueMultiplierValue);
-        editText.setTextSize(32);
+        editText.setTextSize(textSize);
         editText.setTextColor(getResources().getColor(R.color.text_color, null));
         editText.addTextChangedListener(new OptionsWatcher(getApplicationContext(), "highestValueMultiplier"));
         editText.setBackgroundColor(getResources().getColor(R.color.enter_value_background_color, null));
         editText.setGravity(Gravity.CENTER);
-        layoutParams = new RelativeLayout.LayoutParams(64, 144);
-        layoutParams.setMargins(0, 864, 32, 0);
+        layoutParams = new RelativeLayout.LayoutParams(textSize * 3, textSize * 5);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.35), (int)(screenWidth * 0.05), 0);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         editText.setLayoutParams(layoutParams);
         parentLayout.addView(editText);
@@ -111,8 +122,8 @@ public class OptionsActivity extends AppCompatActivity {
         // Back Button
         ImageView img = new ImageView(this);
         img.setImageResource(R.drawable.left_arrow);
-        layoutParams = new RelativeLayout.LayoutParams(128, 128);
-        layoutParams.setMargins(16, 0, 0, 16);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.1), (int)(screenHeight * 0.1));
+        layoutParams.setMargins((int)(screenWidth * 0.05), 0, 0, (int)(screenHeight * 0.01));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
 
