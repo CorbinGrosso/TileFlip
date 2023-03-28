@@ -10,5 +10,6 @@
     <color name="background_color">#C8DCDC</color>
     <color name="text_color">#6496FA</color>
     <color name="memo_color">#6496FA</color>
+    <color name="memo_selected_color">#C8FAFA</color>
     <color name="enter_value_background_color">#DCDCDC</color>
 </resources>

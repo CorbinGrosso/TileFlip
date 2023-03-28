@@ -24,8 +24,8 @@ public class GameScreenActivity extends AppCompatActivity {
     private RelativeLayout gameBoardLayout;
     private RelativeLayout announcementLayout;
     private RelativeLayout memoLayout;
-    private int[] memoIDs;
-    private int flipButtonID;
+    private int[] memoIDs, memoTextIDs;
+    private int flipButtonID, flipButtonTextID;
     private boolean[] memoIsSelected;
     private boolean flipButtonIsSelected = true;
     private int screenWidth, screenHeight;
@@ -77,10 +77,7 @@ public class GameScreenActivity extends AppCompatActivity {
         }
         int highestValueMultiplier = odh.getHighestValueMultiplier();
         memoIDs = new int[highestValueMultiplier + 1];
-        for (int i = 0; i < highestValueMultiplier; i++) {
-            memoIDs[i] = View.generateViewId();
-        }
-        flipButtonID = View.generateViewId();
+        memoTextIDs = new int[highestValueMultiplier + 1];
 
         // set all memo buttons as unselected
         memoIsSelected = new boolean[highestValueMultiplier + 1];
@@ -329,6 +326,7 @@ public class GameScreenActivity extends AppCompatActivity {
     private void drawMemoButton(int x, int y, int val, int tileSize) {
 
         ImageView img = new ImageView(this);
+        memoIDs[val] = View.generateViewId();
         img.setId(memoIDs[val]);
         img.setImageResource(R.drawable.tile);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
@@ -340,44 +338,68 @@ public class GameScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!memoIsSelected[val]) {
                     ImageView img;
+                    TextView text;
                     // turn off all memo buttons
                     for (int i = 0; i < memoIDs.length; i++) {
+                        // reset button image
                         img = findViewById(memoIDs[i]);
                         img.setImageResource(R.drawable.tile);
+                        // reset button value
+                        if (i == 0) {
+                            img = findViewById(memoTextIDs[i]);
+                            img.setImageResource(R.drawable.bomb_memo_icon);
+                        } else {
+                            text = findViewById(memoTextIDs[i]);
+                            text.setTextColor(getColor(R.color.text_color));
+                        }
                         memoIsSelected[i] = false;
                     }
                     // turn off flip button
                     img = findViewById(flipButtonID);
                     img.setImageResource(R.drawable.tile_flip_button);
+                    text = findViewById(flipButtonTextID);
+                    text.setTextColor(getColor(R.color.text_color));
                     flipButtonIsSelected = false;
                     // turn on this memo
                     img = findViewById(memoIDs[val]);
                     img.setImageResource(R.drawable.tile_pressed);
+                    if (val == 0) {
+                        img = findViewById(memoTextIDs[val]);
+                        img.setImageResource(R.drawable.bomb_memo_icon_pressed);
+                    } else {
+                        text = findViewById(memoTextIDs[val]);
+                        text.setTextColor(getColor(R.color.memo_selected_color));
+                    }
                     memoIsSelected[val] = true;
                 }
             }
         });
         memoLayout.addView(img);
 
-        if (val > 0) {
+        // put value on button
+        memoTextIDs[val] = View.generateViewId();
+        if (val == 0) {
+            img = new ImageView(this);
+            img.setImageResource(R.drawable.bomb_memo_icon);
+            img.setId(memoTextIDs[val]);
+            img.setLayoutParams(layoutParams);
+            memoLayout.addView(img);
+        } else {
             TextView text = new TextView(this);
             String textString = "" + val;
             text.setText(textString);
             text.setTextSize(24);
             text.setGravity(Gravity.CENTER);
+            text.setId(memoTextIDs[val]);
             text.setTextColor(getColor(R.color.text_color));
             text.setLayoutParams(layoutParams);
             memoLayout.addView(text);
-        } else {
-            img = new ImageView(this);
-            img.setImageResource(R.drawable.bomb_memo_icon);
-            img.setLayoutParams(layoutParams);
-            memoLayout.addView(img);
         }
     }
 
     private void drawFlipButton(int x, int y, int tileSize) {
         ImageView img = new ImageView(this);
+        flipButtonID = View.generateViewId();
         img.setId(flipButtonID);
         img.setImageResource(R.drawable.tile_flip_button_pressed);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(tileSize * 2.25), (int)(tileSize * 2.25));
@@ -389,15 +411,25 @@ public class GameScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!flipButtonIsSelected) {
                     ImageView img;
+                    TextView text;
                     // turn off all memos
                     for (int i = 0; i < memoIDs.length; i++) {
                         img = findViewById(memoIDs[i]);
                         img.setImageResource(R.drawable.tile);
+                        if (i == 0) {
+                            img = findViewById(memoTextIDs[i]);
+                            img.setImageResource(R.drawable.bomb_memo_icon);
+                        } else {
+                            text = findViewById(memoTextIDs[i]);
+                            text.setTextColor(getColor(R.color.text_color));
+                        }
                         memoIsSelected[i] = false;
                     }
                     // turn on the flip button
                     img = findViewById(flipButtonID);
                     img.setImageResource(R.drawable.tile_flip_button_pressed);
+                    text = findViewById(flipButtonTextID);
+                    text.setTextColor(getColor(R.color.memo_selected_color));
                     flipButtonIsSelected = true;
                 }
             }
@@ -406,7 +438,9 @@ public class GameScreenActivity extends AppCompatActivity {
 
         TextView text = new TextView(this);
         text.setText(R.string.flip_button);
-        text.setTextColor(getColor(R.color.text_color));
+        flipButtonTextID = View.generateViewId();
+        text.setId(flipButtonTextID);
+        text.setTextColor(getColor(R.color.memo_selected_color));
         text.setTextSize(24);
         text.setGravity(Gravity.CENTER);
         text.setLayoutParams(layoutParams);
