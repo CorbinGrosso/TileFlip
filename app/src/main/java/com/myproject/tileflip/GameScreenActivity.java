@@ -192,7 +192,7 @@ public class GameScreenActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        board = new Board(this, gameBoardLayout, getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int)(screenHeight * 0.2));
+        board = new Board(this, gameBoardLayout, findViewById(R.id.blocker_layout), getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int)(screenHeight * 0.2));
 
         board.draw(getApplicationContext());
     }

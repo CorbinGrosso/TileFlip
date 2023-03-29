@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -22,15 +23,16 @@ public class Tile {
     private final int value, x, y, tileSize, textSize;
     private int tileImgID, tileValueID, blockerID;
     private boolean isFaceDown = true;
-    private final RelativeLayout parentLayout;
+    private final RelativeLayout parentLayout, blockerLayout;
     private final Context context;
     private final GameScreenActivity activity;
     private final boolean[] memos = {false, false, false, false, false, false, false, false};
     private final int[] memoIDs = new int[8];
 
-    public Tile(GameScreenActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
+    public Tile(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int x, int y, int tileSize, int value) {
         this.activity = activity;
         this.parentLayout = parentLayout;
+        this.blockerLayout = blockerLayout;
         this.context = context;
         this.x = x;
         this.y = y;
@@ -39,17 +41,12 @@ public class Tile {
         textSize = (int)(tileSize * 0.25);
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public boolean getIsFaceDown() {
         return isFaceDown;
     }
 
     public void reveal() {
         isFaceDown = false;
-        removeAllMemos();
         updateDisplayedValue();
     }
 
@@ -180,6 +177,27 @@ public class Tile {
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
+            public void onAnimationStart(Animator animation) {
+                // Remove all memos since they don't move with the animation
+                removeAllMemos();
+                // create a blocker to block the user from being able to tap another tile
+                blockerID = View.generateViewId();
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                TextView blocker = new TextView(context);
+                blocker.setId(blockerID);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(displayMetrics.widthPixels, (int)(displayMetrics.heightPixels * 0.6));
+                layoutParams.setMargins(0, (int)(displayMetrics.heightPixels * 0.2), 0, 0);
+                blocker.setLayoutParams(layoutParams);
+                blocker.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // do nothing when tapped
+                    }
+                });
+                blockerLayout.addView(blocker);
+            }
+            @Override
             public void onAnimationEnd(Animator animation) {
                 reveal();
                 animateFlip2();
@@ -201,6 +219,8 @@ public class Tile {
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+
+                blockerLayout.removeView(activity.findViewById(blockerID));
 
                 if (value == 0) {
                     try {

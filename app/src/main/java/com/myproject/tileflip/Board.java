@@ -26,7 +26,7 @@ public class Board {
     private int tileSize, maxScore = 1;
     private RelativeLayout parentLayout;
 
-    public Board(GameScreenActivity activity, RelativeLayout parentLayout, Context context, int boardSize, int maxValue, int height) throws JSONException, IOException {
+    public Board(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int boardSize, int maxValue, int height) throws JSONException, IOException {
 
         tiles = new Tile[boardSize][boardSize];
         Random rand = new Random();
@@ -85,7 +85,7 @@ public class Board {
                 int randVal = rand.nextInt(tileVals.size());
                 int tileVal = tileVals.get(randVal);
                 tileVals.remove(randVal);
-                tiles[i][j] = new Tile(activity, parentLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
+                tiles[i][j] = new Tile(activity, parentLayout, blockerLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
                 rowSums[i] += tileVal;
                 colSums[j] += tileVal;
                 if (tileVal == 0) {

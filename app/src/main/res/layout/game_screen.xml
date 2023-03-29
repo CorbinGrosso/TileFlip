@@ -49,4 +49,13 @@
         android:fitsSystemWindows="true"
         android:clipToPadding="false" />
 
+    <RelativeLayout
+        android:id="@+id/blocker_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
