@@ -117,7 +117,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.START);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins(0, 0, 0, 0);
+        layoutParams.setMargins((int)(screenWidth * 0.025), 0, 0, 0);
         text.setLayoutParams(layoutParams);
         scoreboardLayout.addView(text);
 
@@ -129,7 +129,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.END);
         layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins(0, 0, 0, 0);
+        layoutParams.setMargins(0, 0, (int)(screenWidth * 0.025), 0);
         text.setLayoutParams(layoutParams);
 
         // Round Score Text
@@ -139,7 +139,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.START);
         layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
+        layoutParams.setMargins((int)(screenWidth * 0.025), (int)(screenHeight * 0.05), 0, 0);
         text.setLayoutParams(layoutParams);
         scoreboardLayout.addView(text);
 
@@ -151,7 +151,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         text.setGravity(Gravity.END);
         layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins(0, (int)(screenHeight * 0.05), 0, 0);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.05), (int)(screenWidth * 0.025), 0);
         text.setLayoutParams(layoutParams);
     }
 
@@ -308,7 +308,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getColor(R.color.text_color));
         text.setTextSize(textSize);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins(0, 0, 0, (int)(tileSize * 1.75 + textSize));
+        layoutParams.setMargins((int)(screenWidth * 0.025), 0, 0, (int)(tileSize * 1.75 + textSize));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         text.setLayoutParams(layoutParams);
         memoLayout.addView(text);

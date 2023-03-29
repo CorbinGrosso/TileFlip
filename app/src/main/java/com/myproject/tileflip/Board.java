@@ -43,13 +43,6 @@ public class Board {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int boardScreenSize = min(displayMetrics.widthPixels, (int) (displayMetrics.heightPixels * 0.8));
         tileSize = boardScreenSize / (boardSize + 3);
-//        if (boardSize == 3) {
-//            tileSize = 192;
-//        } else if (boardSize == 4) {
-//            tileSize = 160;
-//        } else if (boardSize == 5) {
-//            tileSize = 128;
-//        }
         spaceBetweenTiles = (int)(tileSize * 1.25);
         hPipeOffsetLeft = (int)(tileSize * 0.5);
 
