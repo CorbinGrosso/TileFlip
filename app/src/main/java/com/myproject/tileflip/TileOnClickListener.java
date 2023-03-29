@@ -26,22 +26,6 @@ public class TileOnClickListener implements View.OnClickListener {
                 // perform the first half of the flipping animation
                 tile.animateFlip1();
 
-                if (tile.getValue() == 0) {
-                    try {
-                        activity.putScoresInStatistics();
-                    } catch (JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    activity.gameOver();
-                } else {
-                    // Update the scoreboard
-                    try {
-                        activity.updateRoundScore(tile.getValue());
-                    } catch (JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
             } else {
                 tile.toggleMemo(activity.getSelectedMemo());
             }
