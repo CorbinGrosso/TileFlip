@@ -22,7 +22,7 @@ public class Board {
 
     private final Tile[][] tiles;
     private final int[] colSums, rowSums, colBombs, rowBombs;
-    private final int boardSize, spaceBetweenTiles, hPipeOffsetLeft, height;
+    private final int boardSize, spaceBetweenTiles, pipeOffset, height;
     private int tileSize, maxScore = 1;
     private RelativeLayout parentLayout;
 
@@ -44,7 +44,7 @@ public class Board {
         int boardScreenSize = min(displayMetrics.widthPixels, (int) (displayMetrics.heightPixels * 0.8));
         tileSize = boardScreenSize / (boardSize + 3);
         spaceBetweenTiles = (int)(tileSize * 1.25);
-        hPipeOffsetLeft = (int)(tileSize * 0.5);
+        pipeOffset = (int)(tileSize * 0.625);
 
         // initialize arrays to all 0s
         for (int i = 0; i < boardSize; i++) {
@@ -119,7 +119,7 @@ public class Board {
                 img = new ImageView(context);
                 img.setImageResource(R.drawable.tile_connector_horizontal);
                 layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-                layoutParams.setMargins(spaceBetweenTiles * j + hPipeOffsetLeft, spaceBetweenTiles * i + height, 0, 0);
+                layoutParams.setMargins(spaceBetweenTiles * j + pipeOffset, spaceBetweenTiles * i + height, 0, 0);
                 img.setLayoutParams(layoutParams);
                 parentLayout.addView(img);
 
@@ -127,7 +127,7 @@ public class Board {
                 img = new ImageView(context);
                 img.setImageResource(R.drawable.tile_connector_vertical);
                 layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-                layoutParams.setMargins(spaceBetweenTiles * j, spaceBetweenTiles * i + hPipeOffsetLeft + height, 0, 0);
+                layoutParams.setMargins(spaceBetweenTiles * j, spaceBetweenTiles * i + pipeOffset + height, 0, 0);
                 img.setLayoutParams(layoutParams);
                 parentLayout.addView(img);
             }

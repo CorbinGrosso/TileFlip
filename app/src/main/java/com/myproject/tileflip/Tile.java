@@ -1,22 +1,32 @@
 package com.myproject.tileflip;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class Tile {
 
-    private final int value, x, y, tileSize;
+    private final int value, x, y, tileSize, textSize;
+    private int tileImgID, tileValueID, blockerID;
     private boolean isFaceDown = true;
     private final RelativeLayout parentLayout;
     private final Context context;
     private final GameScreenActivity activity;
     private final boolean[] memos = {false, false, false, false, false, false, false, false};
-    private final int[] memoIDs = {View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(),
-            View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId()};
+    private final int[] memoIDs = new int[8];
 
     public Tile(GameScreenActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
         this.activity = activity;
@@ -26,6 +36,7 @@ public class Tile {
         this.y = y;
         this.tileSize = tileSize;
         this.value = value;
+        textSize = (int)(tileSize * 0.25);
     }
 
     public int getValue() {
@@ -39,7 +50,33 @@ public class Tile {
     public void reveal() {
         isFaceDown = false;
         removeAllMemos();
-        draw();
+        updateDisplayedValue();
+    }
+
+    private void updateDisplayedValue() {
+        parentLayout.removeView(activity.findViewById(tileValueID));
+        if (value == 0) {
+            ImageView img = new ImageView(context);
+            img.setId(tileValueID);
+            img.setImageResource(R.drawable.bomb_icon);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+            layoutParams.setMargins(x, y, 0, 0);
+            img.setLayoutParams(layoutParams);
+            parentLayout.addView(img);
+        } else {
+            TextView text = new TextView(context);
+            String valueText = "" + value;
+            text.setText(valueText);
+            text.setId(tileValueID);
+            text.setTextSize(textSize);
+            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
+            text.setGravity(Gravity.CENTER);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+            layoutParams.setMargins(x, y, 0, 0);
+            text.setLayoutParams(layoutParams);
+            parentLayout.addView(text);
+
+        }
     }
 
     public void toggleMemo(int val) {
@@ -71,6 +108,7 @@ public class Tile {
                 String valString = "" + val;
                 text.setText(valString);
                 text.setTextSize(textSize);
+                memoIDs[val] = View.generateViewId();
                 text.setId(memoIDs[val]);
                 text.setTextColor(context.getResources().getColor(R.color.memo_color, null));
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
@@ -80,6 +118,7 @@ public class Tile {
             } else {
                 ImageView img = new ImageView(context);
                 img.setImageResource(R.drawable.mini_bomb_memo_icon);
+                memoIDs[val] = View.generateViewId();
                 img.setId(memoIDs[val]);
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize / 3, tileSize / 3);
                 layoutParams.setMargins(x, y, 0, 0);
@@ -101,10 +140,10 @@ public class Tile {
 
     public void draw() {
 
-        int textSize = (int)(tileSize * 0.25);
-
         // Tile Image
         ImageView img = new ImageView(context);
+        tileImgID = View.generateViewId();
+        img.setId(tileImgID);
         img.setImageResource(R.drawable.tile);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
         layoutParams.setMargins(x, y, 0, 0);
@@ -115,31 +154,72 @@ public class Tile {
 
         parentLayout.addView(img);
 
-        if (isFaceDown || value != 0) {
-            // Value text
-            TextView text = new TextView(context);
-            if (isFaceDown) {
-                text.setText(R.string.val_unknown);
-            } else {
-                String valueStr = "" + value;
-                text.setText(valueStr);
+        // Value text
+        tileValueID = View.generateViewId();
+        TextView text = new TextView(context);
+        text.setId(tileValueID);
+        text.setText(R.string.val_unknown);
+        text.setTextSize(textSize);
+        text.setTextColor(context.getResources().getColor(R.color.text_color, null));
+        text.setGravity(Gravity.CENTER);
+        layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
+        layoutParams.setMargins(x, y, 0, 0);
+        text.setLayoutParams(layoutParams);
+        parentLayout.addView(text);
+    }
+
+    public void animateFlip1() {
+        // create animation object for the tile image, its value, and all of the memos
+        ObjectAnimator tileImgAnim = ObjectAnimator.ofFloat(activity.findViewById(tileImgID), "rotationY", 0f, 90f);
+        ObjectAnimator tileValueAnim = ObjectAnimator.ofFloat(activity.findViewById(tileValueID), "rotationY", 0f, 90f);
+
+        // Set all animations to play together, and start the animation
+        AnimatorSet animation = new AnimatorSet();
+        animation.playTogether(tileImgAnim, tileValueAnim);
+        animation.setDuration(500);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                reveal();
+                animateFlip2();
             }
-            text.setTextSize(textSize);
-            text.setTextColor(context.getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.CENTER);
-            layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-            layoutParams.setMargins(x, y, 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
-        } else {
-            // Bomb image
-            img = new ImageView(context);
-            img.setImageResource(R.drawable.bomb_icon);
-            layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-            layoutParams.setMargins(x, y, 0, 0);
-            img.setLayoutParams(layoutParams);
-            parentLayout.addView(img);
-        }
+        });
+        animation.start();
+    }
+
+    public void animateFlip2() {
+        // create animation object for the tile image, its value, and all of the memos
+        ObjectAnimator tileImgAnim = ObjectAnimator.ofFloat(activity.findViewById(tileImgID), "rotationY", -90f, 0f);
+        ObjectAnimator tileValueAnim = ObjectAnimator.ofFloat(activity.findViewById(tileValueID), "rotationY", -90f, 0f);
+
+        // Set all animations to play together, and start the animation
+        AnimatorSet animation = new AnimatorSet();
+        animation.playTogether(tileImgAnim, tileValueAnim);
+        animation.setDuration(500);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+                if (value == 0) {
+                    try {
+                        activity.putScoresInStatistics();
+                    } catch (JSONException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    activity.gameOver();
+                } else {
+                    // Update the scoreboard
+                    try {
+                        activity.updateRoundScore(value);
+                    } catch (JSONException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        animation.start();
     }
 
 }

@@ -22,8 +22,9 @@ public class TileOnClickListener implements View.OnClickListener {
         if (tile.getIsFaceDown()) {
             // if flip mode is selected
             if (activity.getFlipButtonIsSelected()) {
-                // flip it over, reveal its value
-                tile.reveal();
+
+                // perform the first half of the flipping animation
+                tile.animateFlip1();
 
                 if (tile.getValue() == 0) {
                     try {
@@ -40,6 +41,7 @@ public class TileOnClickListener implements View.OnClickListener {
                         throw new RuntimeException(e);
                     }
                 }
+
             } else {
                 tile.toggleMemo(activity.getSelectedMemo());
             }
