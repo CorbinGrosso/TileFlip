@@ -194,11 +194,11 @@ public class GameScreenActivity extends AppCompatActivity {
 
         board = new Board(this, gameBoardLayout, findViewById(R.id.blocker_layout), getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int)(screenHeight * 0.2));
 
-        board.draw(getApplicationContext());
+        board.draw();
     }
 
     public void newBoard() throws JSONException, IOException {
-        board.destroy(gameBoardLayout);
+        board.destroy();
         announcementLayout.removeAllViews();
         drawGameBoard();
     }

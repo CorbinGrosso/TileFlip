@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,10 +23,11 @@ public class Tile {
 
     private final int value, x, y, tileSize, textSize;
     private int tileImgID, tileValueID, blockerID;
-    private boolean isFaceDown = true;
-    private final RelativeLayout parentLayout, blockerLayout;
+    private boolean isFaceDown = true, isExample = false;
+    private RelativeLayout parentLayout, blockerLayout;
     private final Context context;
-    private final GameScreenActivity activity;
+    private GameScreenActivity activity;
+    private HowToPlayActivity htpActivity;
     private final boolean[] memos = {false, false, false, false, false, false, false, false};
     private final int[] memoIDs = new int[8];
 
@@ -38,6 +40,18 @@ public class Tile {
         this.y = y;
         this.tileSize = tileSize;
         this.value = value;
+        textSize = (int)(tileSize * 0.25);
+    }
+
+    public Tile(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
+        htpActivity = activity;
+        this.parentLayout = parentLayout;
+        this.context = context;
+        this.x = x;
+        this.y = y;
+        this.tileSize = tileSize;
+        this.value = value;
+        isExample = true;
         textSize = (int)(tileSize * 0.25);
     }
 
@@ -147,7 +161,9 @@ public class Tile {
         img.setLayoutParams(layoutParams);
 
         // Make image respond to being tapped
-        img.setOnClickListener(new TileOnClickListener(activity, this));
+        if (!isExample) {
+            img.setOnClickListener(new TileOnClickListener(activity, this));
+        }
 
         parentLayout.addView(img);
 

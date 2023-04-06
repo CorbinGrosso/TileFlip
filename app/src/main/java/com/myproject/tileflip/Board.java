@@ -25,6 +25,7 @@ public class Board {
     private final int boardSize, spaceBetweenTiles, pipeOffset, height;
     private int tileSize, maxScore = 1;
     private RelativeLayout parentLayout;
+    private Context context;
 
     public Board(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int boardSize, int maxValue, int height) throws JSONException, IOException {
 
@@ -37,8 +38,9 @@ public class Board {
         this.boardSize = boardSize;
         this.height = height;
         this.parentLayout = parentLayout;
+        this.context = context;
 
-
+        // calculate sizes of drawables
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int boardScreenSize = min(displayMetrics.widthPixels, (int) (displayMetrics.heightPixels * 0.8));
@@ -102,11 +104,52 @@ public class Board {
         gdh.storeData(context);
     }
 
+    public Board(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int height) throws JSONException, IOException {
+
+        boardSize = 3;
+        int maxValue = 3;
+        tiles = new Tile[boardSize][boardSize];
+        Random rand = new Random();
+        colSums = new int[boardSize];
+        rowSums = new int[boardSize];
+        colBombs = new int[boardSize];
+        rowBombs = new int[boardSize];
+        this.height = height;
+        this.parentLayout = parentLayout;
+        this.context = context;
+
+        // Calculate sizes of drawables
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int boardScreenSize = min(displayMetrics.widthPixels, (int) (displayMetrics.heightPixels * 0.8));
+        tileSize = boardScreenSize / (boardSize + 3);
+        spaceBetweenTiles = (int)(tileSize * 1.25);
+        pipeOffset = (int)(tileSize * 0.625);
+
+        // initialize arrays to all 0s
+        for (int i = 0; i < boardSize; i++) {
+            colSums[i] = 0;
+            rowSums[i] = 0;
+            colBombs[i] = 0;
+            rowBombs[i] = 0;
+        }
+
+        // Create tiles to populate board
+        // Also set all tiles to a value of 0 for the sake of demonstration
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                tiles[i][j] = new Tile(activity, parentLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, 0);
+                rowBombs[i] += 1;
+                colBombs[j] += 1;
+            }
+        }
+    }
+
     public int getMaxScore() {
         return maxScore;
     }
 
-    public void draw(Context context) {
+    public void draw() {
 
         ImageView img;
         RelativeLayout.LayoutParams layoutParams;
@@ -186,7 +229,7 @@ public class Board {
         parentLayout.addView(text);
     }
 
-    public void destroy(RelativeLayout parentLayout) {
+    public void destroy() {
         parentLayout.removeAllViews();
     }
 }
