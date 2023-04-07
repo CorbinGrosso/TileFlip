@@ -6,6 +6,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -30,8 +32,9 @@ public class Tile {
     private HowToPlayActivity htpActivity;
     private final boolean[] memos = {false, false, false, false, false, false, false, false};
     private final int[] memoIDs = new int[8];
+    private MediaPlayer mediaPlayer;
 
-    public Tile(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int x, int y, int tileSize, int value) {
+    public Tile(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int x, int y, int tileSize, int value) throws JSONException, IOException {
         this.activity = activity;
         this.parentLayout = parentLayout;
         this.blockerLayout = blockerLayout;
@@ -41,6 +44,14 @@ public class Tile {
         this.tileSize = tileSize;
         this.value = value;
         textSize = (int)(tileSize * 0.25);
+
+        // get options data handler to get the volume
+        OptionsDataHandler odh = new OptionsDataHandler(context);
+        int volume = odh.getVolume();
+
+        // create media player for sfx when flipping tile
+        mediaPlayer = MediaPlayer.create(context, R.raw.points_gained);
+        mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
     }
 
     public Tile(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
@@ -61,6 +72,9 @@ public class Tile {
 
     public void reveal() {
         isFaceDown = false;
+        if (value > 1) {
+            mediaPlayer.start();
+        }
         updateDisplayedValue();
     }
 
@@ -189,7 +203,7 @@ public class Tile {
         // Set all animations to play together, and start the animation
         AnimatorSet animation = new AnimatorSet();
         animation.playTogether(tileImgAnim, tileValueAnim);
-        animation.setDuration(500);
+        animation.setDuration(250);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -230,7 +244,7 @@ public class Tile {
         // Set all animations to play together, and start the animation
         AnimatorSet animation = new AnimatorSet();
         animation.playTogether(tileImgAnim, tileValueAnim);
-        animation.setDuration(500);
+        animation.setDuration(250);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.addListener(new AnimatorListenerAdapter() {
             @Override

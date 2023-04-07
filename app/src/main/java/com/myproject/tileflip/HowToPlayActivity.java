@@ -21,6 +21,7 @@ public class HowToPlayActivity extends AppCompatActivity {
     private int screenWidth, screenHeight, textSize, tileSize;
     private RelativeLayout[] pages;
     private RelativeLayout boardLayout, toolboxLayout;
+    private BackgroundMusicPlayer bmp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -313,6 +314,18 @@ public class HowToPlayActivity extends AppCompatActivity {
         text.setGravity(Gravity.CENTER);
         text.setLayoutParams(layoutParams);
         layout.addView(text);
+
+        bmp = (BackgroundMusicPlayer) getApplication();
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 
     private void createPageNumber(int pageIndex) {

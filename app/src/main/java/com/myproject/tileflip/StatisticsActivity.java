@@ -16,6 +16,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class StatisticsActivity extends AppCompatActivity {
+    private BackgroundMusicPlayer bmp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +110,18 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
         parentLayout.addView(img);
+
+        bmp = (BackgroundMusicPlayer) getApplication();
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 }
 

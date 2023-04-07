@@ -29,6 +29,7 @@ public class GameScreenActivity extends AppCompatActivity {
     private boolean[] memoIsSelected;
     private boolean flipButtonIsSelected = true;
     private int screenWidth, screenHeight;
+    private BackgroundMusicPlayer bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,17 @@ public class GameScreenActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
+        bmp = (BackgroundMusicPlayer) getApplication();
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 
     private void drawScoreboard() {

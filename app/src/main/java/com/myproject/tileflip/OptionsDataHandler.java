@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class OptionsDataHandler extends DataHandler{
-    private int boardSize = 3, highestValueMultiplier = 3;
-    private final String filename = "options", boardSizeString = "Board Size", highestValueMultiplierString = "Highest Value Multiplier";
+    private int boardSize = 3, highestValueMultiplier = 3, volume = 100;
+    private final String filename = "options", boardSizeString = "Board Size", highestValueMultiplierString = "Highest Value Multiplier", volumeString = "Volume";
 
     public OptionsDataHandler(Context context) throws JSONException, IOException {
         loadData(context);
@@ -34,6 +34,14 @@ public class OptionsDataHandler extends DataHandler{
         this.highestValueMultiplier = highestValueMultiplier;
     }
 
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
     public void loadData(@NonNull Context context) throws IOException, JSONException {
 
         JSONObject jsonObject;
@@ -48,16 +56,19 @@ public class OptionsDataHandler extends DataHandler{
         this.boardSize = jsonObject.getInt(boardSizeString);
 
         this.highestValueMultiplier = jsonObject.getInt(highestValueMultiplierString);
+
+        this.volume = jsonObject.getInt(volumeString);
     }
 
     public void storeData(@NonNull Context context) throws JSONException, IOException {
-        super.storeData(context, this.setValues(),filename);
+        super.storeData(context, this.setValues(), filename);
     }
 
     public JSONObject setValues() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put(boardSizeString, this.boardSize);
-        json.put(highestValueMultiplierString, this.highestValueMultiplier);
+        json.put(boardSizeString, boardSize);
+        json.put(highestValueMultiplierString, highestValueMultiplier);
+        json.put(volumeString, volume);
         return json;
     }
 }

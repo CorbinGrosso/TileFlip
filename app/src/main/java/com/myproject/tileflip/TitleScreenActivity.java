@@ -1,6 +1,7 @@
 package com.myproject.tileflip;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +13,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class TitleScreenActivity extends AppCompatActivity {
+
+    public BackgroundMusicPlayer bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,28 @@ public class TitleScreenActivity extends AppCompatActivity {
             parentLayout.addView(text);
         }
 
+        // get option data handler to get volume for background music
+        OptionsDataHandler odh = null;
+        try {
+            odh = new OptionsDataHandler(getApplicationContext());
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        int volume = odh.getVolume();
+
+        // set the volume of the background music
+        bmp = (BackgroundMusicPlayer) getApplication();
+        bmp.setVolume(volume);
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 
 }

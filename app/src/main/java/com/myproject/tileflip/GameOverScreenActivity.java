@@ -19,6 +19,7 @@ public class GameOverScreenActivity extends AppCompatActivity {
 
     private RelativeLayout titleLayout, buttonLayout;
     private int screenWidth, screenHeight, titleSize, scoreSize, buttonTextSize;
+    private BackgroundMusicPlayer bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,17 @@ public class GameOverScreenActivity extends AppCompatActivity {
 
         drawMainMenuButton();
 
+        bmp = (BackgroundMusicPlayer) getApplication();
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 
     private void drawTitle() {

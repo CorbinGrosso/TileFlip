@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class OptionsActivity extends AppCompatActivity {
+    private BackgroundMusicPlayer bmp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +121,49 @@ public class OptionsActivity extends AppCompatActivity {
         editText.setLayoutParams(layoutParams);
         parentLayout.addView(editText);
 
+        // Display Volume
+        text = new TextView(this);
+        text.setText(R.string.volumeOption);
+        text.setTextSize(textSize);
+        text.setTextColor(getResources().getColor(R.color.text_color, null));
+        layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.8));
+        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.5), 0, 0);
+        text.setLayoutParams(layoutParams);
+        parentLayout.addView(text);
+
+        // Set up seekbar
+        SeekBar volumeSlider = findViewById(R.id.volume_slider);
+        System.out.println(odh.getVolume());
+        volumeSlider.setProgress(odh.getVolume());
+        layoutParams = new RelativeLayout.LayoutParams(textSize * 3, textSize * 5);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.5), (int)(screenWidth * 0.05), 0);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.width = (int) (screenWidth * 0.5);
+        volumeSlider.setLayoutParams(layoutParams);
+        volumeSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Update the volume based on the progress of the slider
+                odh.setVolume(progress);
+                bmp.setVolume(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Do nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Do nothing
+                try {
+                    odh.storeData(getApplicationContext());
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         // Back Button
         ImageView img = new ImageView(this);
         img.setImageResource(R.drawable.left_arrow);
@@ -137,5 +182,17 @@ public class OptionsActivity extends AppCompatActivity {
         });
 
         parentLayout.addView(img);
+
+        bmp = (BackgroundMusicPlayer) getApplication();
+    }
+
+    public void onPause() {
+        super.onPause();
+        bmp.pause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        bmp.resume();
     }
 }

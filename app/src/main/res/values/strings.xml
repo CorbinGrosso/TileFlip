@@ -14,6 +14,7 @@
     <!-- Strings used for the Options Menu -->
     <string name="boardSizeOption">Board Size:</string>
     <string name="highestValueMultiplierOption">Highest Value Multiplier:</string>
+    <string name="volumeOption">Volume:</string>
 
     <!-- Strings used for the Game Board -->
     <string name="scoreboard_total">Total Score: </string>
