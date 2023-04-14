@@ -158,4 +158,9 @@ public class GameOverScreenActivity extends AppCompatActivity {
         buttonLayout.addView(text);
     }
 
+    @Override
+    public void onBackPressed() {
+        // Do nothing (prevent going back to previous activity in uncontrolled ways)
+    }
+
 }

@@ -21,6 +21,9 @@ public class TitleScreenActivity extends AppCompatActivity {
 
     public BackgroundMusicPlayer bmp;
 
+    private int screenWidth, screenHeight, textSize;
+    private RelativeLayout parentLayout, startOptionsLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,15 +40,15 @@ public class TitleScreenActivity extends AppCompatActivity {
         // get screen dimensions
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-        int screenHeight = displayMetrics.heightPixels;
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
 
         // Creating the layout
-        RelativeLayout parentLayout = (RelativeLayout) findViewById(R.id.parent_layout);
+        parentLayout = (RelativeLayout) findViewById(R.id.parent_layout);
 
         // calculate text sizes
         int titleSize = (int)(screenWidth * 0.075);
-        int textSize = (int)(screenWidth * 3 / 64);
+        textSize = (int)(screenWidth * 3 / 64);
 
         // Title
         TextView text = new TextView(this);
@@ -80,43 +83,14 @@ public class TitleScreenActivity extends AppCompatActivity {
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 
-        // set up arrays with information for making the buttons
-        int[] strings = {R.string.start_button, R.string.statistics_button, R.string.options_button, R.string.how_to_play_button};
-        Class[] activities = {GameScreenActivity.class, StatisticsActivity.class, OptionsActivity.class, HowToPlayActivity.class};
+        // Make popup menu for new/continue game option and hide it for use with the start button
+        makeStartOptions();
 
-        for (int i = 0; i < 4; i++) {
-            // Button Image
-            img = new ImageView(this);
-            img.setImageResource(R.drawable.title_screen_button);
-            layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
-            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * i + screenHeight * 0.4), 0, 0);
-            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            img.setLayoutParams(layoutParams);
+        // Make the start button
+        makeStartButton();
 
-            // Make image respond to being tapped
-            Class activity = activities[i];
-            img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), activity);
-                    startActivity(intent);
-                }
-            });
-
-            parentLayout.addView(img);
-
-            // Button Text
-            text = new TextView(this);
-            text.setText(strings[i]);
-            text.setTextSize(textSize);
-            text.setTextColor(getResources().getColor(R.color.text_color, null));
-            text.setGravity(Gravity.CENTER);
-            layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
-            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * i + screenHeight * 0.4), 0, 0);
-            text.setLayoutParams(layoutParams);
-            parentLayout.addView(text);
-        }
+        // Create all of the buttons on the screen except the start button
+        makeButtons();
 
         // get option data handler to get volume for background music
         OptionsDataHandler odh = null;
@@ -140,6 +114,196 @@ public class TitleScreenActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         bmp.resume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing (prevent going back to previous activity in uncontrolled ways)
+    }
+
+    private void makeButtons() {
+
+        // set up arrays with information for making the buttons
+        int[] strings = {R.string.statistics_button, R.string.options_button, R.string.how_to_play_button};
+        Class[] activities = {StatisticsActivity.class, OptionsActivity.class, HowToPlayActivity.class};
+        ImageView img;
+        TextView text;
+        RelativeLayout.LayoutParams layoutParams;
+
+        for (int i = 0; i < 3; i++) {
+            // Button Image
+            img = new ImageView(this);
+            img.setImageResource(R.drawable.title_screen_button);
+            layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.4), 0, 0);
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            img.setLayoutParams(layoutParams);
+
+            // Make image respond to being tapped
+            Class activity = activities[i];
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), activity);
+                    startActivity(intent);
+                }
+            });
+
+            parentLayout.addView(img);
+
+            // Button Text
+            text = new TextView(this);
+            text.setText(strings[i]);
+            text.setTextSize(textSize);
+            text.setTextColor(getResources().getColor(R.color.text_color, null));
+            text.setGravity(Gravity.CENTER);
+            layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.4), 0, 0);
+            text.setLayoutParams(layoutParams);
+            parentLayout.addView(text);
+        }
+    }
+
+    private void makeStartOptions() {
+        startOptionsLayout = findViewById(R.id.start_options_layout);
+
+        startOptionsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startOptionsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        // pop-up box
+        ImageView img = new ImageView(getApplicationContext());
+        img.setImageResource(R.drawable.start_options);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.95), (int)(screenHeight * 0.95));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.075), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        img.setLayoutParams(layoutParams);
+        startOptionsLayout.addView(img);
+
+        // continue button image
+        img = new ImageView(getApplicationContext());
+        img.setImageResource(R.drawable.title_screen_button);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.55), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        img.setLayoutParams(layoutParams);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                GameDataHandler gdh;
+                try {
+                    gdh = new GameDataHandler(getApplicationContext());
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+                gdh.setContinue(true);
+                try {
+                    gdh.storeData(getApplicationContext());
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Intent intent = new Intent(getApplicationContext(), GameScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+        startOptionsLayout.addView(img);
+
+        // continue button text
+        TextView text = new TextView(getApplicationContext());
+        text.setTextColor(getResources().getColor(R.color.text_color, null));
+        text.setTextSize(textSize);
+        text.setText(R.string.continue_game);
+        text.setGravity(Gravity.CENTER);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.55), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        text.setLayoutParams(layoutParams);
+        startOptionsLayout.addView(text);
+
+        // new game button image
+        img = new ImageView(getApplicationContext());
+        img.setImageResource(R.drawable.title_screen_button);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        img.setLayoutParams(layoutParams);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                GameDataHandler gdh;
+                try {
+                    gdh = new GameDataHandler(getApplicationContext());
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+                gdh.setContinue(false);
+                try {
+                    gdh.storeData(getApplicationContext());
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Intent intent = new Intent(getApplicationContext(), GameScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+        startOptionsLayout.addView(img);
+
+        // new game button text
+        text = new TextView(getApplicationContext());
+        text.setTextColor(getResources().getColor(R.color.text_color, null));
+        text.setTextSize(textSize);
+        text.setText(R.string.new_game);
+        text.setGravity(Gravity.CENTER);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        text.setLayoutParams(layoutParams);
+        startOptionsLayout.addView(text);
+
+        startOptionsLayout.setVisibility(View.GONE);
+    }
+
+    private void makeStartButton() {
+
+        ImageView img;
+        TextView text;
+        RelativeLayout.LayoutParams layoutParams;
+
+        // Button Image
+        img = new ImageView(this);
+        img.setImageResource(R.drawable.title_screen_button);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        img.setLayoutParams(layoutParams);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startOptionsLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        parentLayout.addView(img);
+
+        // Button Text
+        text = new TextView(this);
+        text.setText(R.string.start_button);
+        text.setTextSize(textSize);
+        text.setTextColor(getResources().getColor(R.color.text_color, null));
+        text.setGravity(Gravity.CENTER);
+        layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        text.setLayoutParams(layoutParams);
+        parentLayout.addView(text);
     }
 
 }

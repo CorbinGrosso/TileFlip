@@ -1,10 +1,11 @@
 package com.myproject.tileflip;
 
 import static java.lang.Math.floor;
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Random;
 
 import android.content.Context;
@@ -18,16 +19,17 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
-public class Board {
+public class Board implements Serializable {
 
     private final Tile[][] tiles;
     private final int[] colSums, rowSums, colBombs, rowBombs;
     private final int boardSize, spaceBetweenTiles, pipeOffset, height;
-    private int tileSize, maxScore = 1;
-    private RelativeLayout parentLayout;
-    private Context context;
+    private final int tileSize;
+    private int maxScore = 1;
+    private final RelativeLayout parentLayout;
+    private final Context context;
 
-    public Board(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int boardSize, int maxValue, int height) throws JSONException, IOException {
+    public Board(GameScreenActivity activity, RelativeLayout parentLayout, RelativeLayout blockerLayout, Context context, int boardSize, int maxValue, int height, int[][] tileVals) throws JSONException, IOException {
 
         tiles = new Tile[boardSize][boardSize];
         Random rand = new Random();
@@ -56,45 +58,64 @@ public class Board {
             rowBombs[i] = 0;
         }
 
-        // set up arraylist of values to use for the tiles
-        ArrayList<Integer> tileVals = new ArrayList<Integer>();
-        for (int i = 0; i < boardSize * boardSize; i++) {
-            // a third of the board is guaranteed to be bombs
-            if (i < floor(boardSize * boardSize / 3.0)) {
-                tileVals.add(0);
-            // up to half of the board can be bombs, with a lower chance of a bomb spawning
-            } else if (i < floor(boardSize * boardSize / 2.0)) {
-                int percent = 25; // 25% chance of a bomb
-                int randVal = rand.nextInt(100) + 1;
-                if (percent <= randVal) {
-                    tileVals.add(0);
-                } else {
-                    tileVals.add(rand.nextInt(maxValue) + 1);
+        if (tileVals != null) {
+            // Create tiles to populate board
+            // Also calculate totals like bomb counts and max score
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    int tileVal = tileVals[i][j];
+                    tiles[i][j] = new Tile(activity, parentLayout, blockerLayout, context, spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
+                    rowSums[i] += tileVal;
+                    colSums[j] += tileVal;
+                    if (tileVal == 0) {
+                        rowBombs[i] += 1;
+                        colBombs[j] += 1;
+                    } else {
+                        maxScore *= tileVal;
+                    }
                 }
-            // guarantees that at least one value is above 1
-            } else if (i < floor(boardSize * boardSize / 2.0) + 1) {
-                tileVals.add(rand.nextInt(maxValue - 1) + 2);
-            // the rest of the board is filled with multipliers
-            } else {
-                tileVals.add(rand.nextInt(maxValue) + 1);
             }
-        }
-
-        // Create tiles to populate board
-        // Also calculate totals like bomb counts and max score
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                int randVal = rand.nextInt(tileVals.size());
-                int tileVal = tileVals.get(randVal);
-                tileVals.remove(randVal);
-                tiles[i][j] = new Tile(activity, parentLayout, blockerLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
-                rowSums[i] += tileVal;
-                colSums[j] += tileVal;
-                if (tileVal == 0) {
-                    rowBombs[i] += 1;
-                    colBombs[j] += 1;
+        } else {
+            // set up arraylist of values to use for the tiles
+            ArrayList<Integer> potentialTileVals = new ArrayList<>();
+            for (int i = 0; i < boardSize * boardSize; i++) {
+                // a third of the board is guaranteed to be bombs
+                if (i < floor(boardSize * boardSize / 3.0)) {
+                    potentialTileVals.add(0);
+                    // up to half of the board can be bombs, with a lower chance of a bomb spawning
+                } else if (i < floor(boardSize * boardSize / 2.0)) {
+                    int percent = 25; // 25% chance of a bomb
+                    int randVal = rand.nextInt(100) + 1;
+                    if (percent <= randVal) {
+                        potentialTileVals.add(0);
+                    } else {
+                        potentialTileVals.add(rand.nextInt(maxValue) + 1);
+                    }
+                    // guarantees that at least one value is above 1
+                } else if (i < floor(boardSize * boardSize / 2.0) + 1) {
+                    potentialTileVals.add(rand.nextInt(maxValue - 1) + 2);
+                    // the rest of the board is filled with multipliers
                 } else {
-                    maxScore *= tileVal;
+                    potentialTileVals.add(rand.nextInt(maxValue) + 1);
+                }
+            }
+
+            // Create tiles to populate board
+            // Also calculate totals like bomb counts and max score
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    int randVal = rand.nextInt(potentialTileVals.size());
+                    int tileVal = potentialTileVals.get(randVal);
+                    potentialTileVals.remove(randVal);
+                    tiles[i][j] = new Tile(activity, parentLayout, blockerLayout, context, spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, tileVal);
+                    rowSums[i] += tileVal;
+                    colSums[j] += tileVal;
+                    if (tileVal == 0) {
+                        rowBombs[i] += 1;
+                        colBombs[j] += 1;
+                    } else {
+                        maxScore *= tileVal;
+                    }
                 }
             }
         }
@@ -107,9 +128,7 @@ public class Board {
     public Board(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int height) throws JSONException, IOException {
 
         boardSize = 3;
-        int maxValue = 3;
         tiles = new Tile[boardSize][boardSize];
-        Random rand = new Random();
         colSums = new int[boardSize];
         rowSums = new int[boardSize];
         colBombs = new int[boardSize];
@@ -138,7 +157,7 @@ public class Board {
         // Also set all tiles to a value of 0 for the sake of demonstration
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                tiles[i][j] = new Tile(activity, parentLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, 0);
+                tiles[i][j] = new Tile(parentLayout, context.getApplicationContext(), spaceBetweenTiles * j, spaceBetweenTiles * i + height, tileSize, 0);
                 rowBombs[i] += 1;
                 colBombs[j] += 1;
             }
@@ -231,6 +250,16 @@ public class Board {
 
     public void destroy() {
         parentLayout.removeAllViews();
+    }
+
+    public int[][] getTileVals() {
+        int[][] tileVals = new int[tiles.length][tiles[0].length];
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j =0; j < tiles[i].length; j++) {
+                tileVals[i][j] = tiles[i][j].getValue();
+            }
+        }
+        return tileVals;
     }
 }
 

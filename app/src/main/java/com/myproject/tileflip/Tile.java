@@ -4,15 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,8 +17,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable {
 
     private final int value, x, y, tileSize, textSize;
     private int tileImgID, tileValueID, blockerID;
@@ -29,7 +27,6 @@ public class Tile {
     private RelativeLayout parentLayout, blockerLayout;
     private final Context context;
     private GameScreenActivity activity;
-    private HowToPlayActivity htpActivity;
     private final boolean[] memos = {false, false, false, false, false, false, false, false};
     private final int[] memoIDs = new int[8];
     private MediaPlayer mediaPlayer;
@@ -54,8 +51,7 @@ public class Tile {
         mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
     }
 
-    public Tile(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
-        htpActivity = activity;
+    public Tile(RelativeLayout parentLayout, Context context, int x, int y, int tileSize, int value) {
         this.parentLayout = parentLayout;
         this.context = context;
         this.x = x;
@@ -258,7 +254,11 @@ public class Tile {
                     } catch (JSONException | IOException e) {
                         throw new RuntimeException(e);
                     }
-                    activity.gameOver();
+                    try {
+                        activity.gameOver();
+                    } catch (JSONException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     // Update the scoreboard
                     try {
@@ -270,6 +270,10 @@ public class Tile {
             }
         });
         animation.start();
+    }
+
+    public int getValue() {
+        return value;
     }
 
 }

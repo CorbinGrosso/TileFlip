@@ -16,4 +16,14 @@
         android:fitsSystemWindows="true"
         android:clipToPadding="false" />
 
+    <RelativeLayout
+        android:id="@+id/start_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false" />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

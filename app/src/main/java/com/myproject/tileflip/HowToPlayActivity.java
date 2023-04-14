@@ -102,7 +102,7 @@ public class HowToPlayActivity extends AppCompatActivity {
 
         createText("This is a tile", 0, (int)(screenHeight * 0.25), 0, 0, 1);
 
-        Tile tile = new Tile(this, pages[1], getApplicationContext(), (int)(screenWidth * 0.5) - tileSize / 2, (int)(screenHeight * 0.4), tileSize, 0);
+        Tile tile = new Tile(pages[1], getApplicationContext(), (int)(screenWidth * 0.5) - tileSize / 2, (int)(screenHeight * 0.4), tileSize, 0);
         tile.draw();
 
         createText("Hidden underneath it is a points multiplier", 0, (int)(screenHeight * 0.5), 0, 0, 1);

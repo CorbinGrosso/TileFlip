@@ -10,6 +10,8 @@
     <string name="options_button">Options</string>
     <string name="how_to_play_button">How to Play</string>
     <string name="statistics_button">Statistics</string>
+    <string name="continue_game">Continue</string>
+    <string name="new_game">New Game</string>
 
     <!-- Strings used for the Options Menu -->
     <string name="boardSizeOption">Board Size:</string>

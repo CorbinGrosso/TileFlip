@@ -27,9 +27,10 @@ public class GameScreenActivity extends AppCompatActivity {
     private int[] memoIDs, memoTextIDs;
     private int flipButtonID, flipButtonTextID;
     private boolean[] memoIsSelected;
-    private boolean flipButtonIsSelected = true;
+    private boolean flipButtonIsSelected = true, fromGDH;
     private int screenWidth, screenHeight;
     private BackgroundMusicPlayer bmp;
+    private GameDataHandler gdh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +56,26 @@ public class GameScreenActivity extends AppCompatActivity {
         announcementLayout = findViewById(R.id.announcement_layout);
         memoLayout = findViewById(R.id.memo_layout);
 
-        // reset values in the game data handler to clear any leftover data from a previous game
-        GameDataHandler gdh;
+        // load in the game data handler
         try {
             gdh = new GameDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {
             throw new RuntimeException(e);
         }
-        gdh.resetValues();
-        try {
-            gdh.storeData(getApplicationContext());
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e);
+
+        // if the player wants to start a new game, or they do not have an old game to continue
+        if (!gdh.getContinue() || gdh.getGameOver()) {
+            // reset values in the game data handler to clear any leftover data from a previous game
+            gdh.resetValues();
+            try {
+                gdh.storeData(getApplicationContext());
+            } catch (JSONException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            fromGDH = false;
+        } else {
+            fromGDH = true;
+            totalScore = gdh.getTotalScore();
         }
 
         // Create IDs for all of the buttons in the toolbox
@@ -112,6 +121,11 @@ public class GameScreenActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         bmp.resume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing (prevent going back to previous activity in uncontrolled ways)
     }
 
     private void drawScoreboard() {
@@ -168,7 +182,6 @@ public class GameScreenActivity extends AppCompatActivity {
     }
 
     public void updateRoundScore(int value) throws JSONException, IOException {
-        GameDataHandler gdh = new GameDataHandler(getApplicationContext());
         gdh.updateRoundScore(value);
         gdh.storeData(getApplicationContext());
         roundScore = gdh.getRoundScore();
@@ -182,7 +195,6 @@ public class GameScreenActivity extends AppCompatActivity {
     }
 
     private void updateTotalScore() throws JSONException, IOException {
-        GameDataHandler gdh = new GameDataHandler(getApplicationContext());
         gdh.updateTotalScore();
         gdh.storeData(getApplicationContext());
         roundScore = gdh.getRoundScore();
@@ -204,13 +216,27 @@ public class GameScreenActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        board = new Board(this, gameBoardLayout, findViewById(R.id.blocker_layout), getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int)(screenHeight * 0.2));
-
+        if (fromGDH) {
+            board = new Board(this, gameBoardLayout, findViewById(R.id.blocker_layout), getApplicationContext(), gdh.getBoardSize(), gdh.getHighestValueMultiplier(), (int)(screenHeight * 0.2), gdh.getTileVals());
+            roundScore = 0;
+            gdh.updateRoundScore(0);
+            gdh.storeData(getApplicationContext());
+            totalScore = gdh.getTotalScore();
+        } else {
+            board = new Board(this, gameBoardLayout, findViewById(R.id.blocker_layout), getApplicationContext(), odh.getBoardSize(), odh.getHighestValueMultiplier(), (int) (screenHeight * 0.2), null);
+            gdh.setTileVals(board.getTileVals());
+            gdh.setBoardSize(odh.getBoardSize());
+            gdh.setHighestValueMultiplier(odh.getHighestValueMultiplier());
+            gdh.storeData(getApplicationContext());
+        }
         board.draw();
     }
 
     public void newBoard() throws JSONException, IOException {
         board.destroy();
+        gdh.setContinue(false);
+        gdh.storeData(getApplicationContext());
+        fromGDH = false;
         announcementLayout.removeAllViews();
         drawGameBoard();
     }
@@ -300,7 +326,10 @@ public class GameScreenActivity extends AppCompatActivity {
         return vals;
     }
 
-    public void gameOver() {
+    public void gameOver() throws JSONException, IOException {
+        gdh.setGameOver(true);
+        gdh.setContinue(false);
+        gdh.storeData(getApplicationContext());
         drawAnnouncement(false);
     }
 
