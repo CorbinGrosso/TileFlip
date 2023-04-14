@@ -19,7 +19,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class Tile implements Serializable {
+public class Tile {
 
     private final int value, x, y, tileSize, textSize;
     private int tileImgID, tileValueID, blockerID;
@@ -199,7 +199,7 @@ public class Tile implements Serializable {
         // Set all animations to play together, and start the animation
         AnimatorSet animation = new AnimatorSet();
         animation.playTogether(tileImgAnim, tileValueAnim);
-        animation.setDuration(250);
+        animation.setDuration(100);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -240,7 +240,7 @@ public class Tile implements Serializable {
         // Set all animations to play together, and start the animation
         AnimatorSet animation = new AnimatorSet();
         animation.playTogether(tileImgAnim, tileValueAnim);
-        animation.setDuration(250);
+        animation.setDuration(100);
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.addListener(new AnimatorListenerAdapter() {
             @Override

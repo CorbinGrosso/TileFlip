@@ -1,11 +1,11 @@
 package com.myproject.tileflip;
 
+import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 import static java.lang.Math.min;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Random;
 
 import android.content.Context;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
-public class Board implements Serializable {
+public class Board {
 
     private final Tile[][] tiles;
     private final int[] colSums, rowSums, colBombs, rowBombs;
@@ -79,24 +79,16 @@ public class Board implements Serializable {
             // set up arraylist of values to use for the tiles
             ArrayList<Integer> potentialTileVals = new ArrayList<>();
             for (int i = 0; i < boardSize * boardSize; i++) {
-                // a third of the board is guaranteed to be bombs
-                if (i < floor(boardSize * boardSize / 3.0)) {
+                // 30% of the board is guaranteed to be bombs
+                if (i < ceil(boardSize * boardSize * 0.3)) {
                     potentialTileVals.add(0);
-                    // up to half of the board can be bombs, with a lower chance of a bomb spawning
-                } else if (i < floor(boardSize * boardSize / 2.0)) {
-                    int percent = 25; // 25% chance of a bomb
-                    int randVal = rand.nextInt(100) + 1;
-                    if (percent <= randVal) {
-                        potentialTileVals.add(0);
-                    } else {
-                        potentialTileVals.add(rand.nextInt(maxValue) + 1);
-                    }
-                    // guarantees that at least one value is above 1
-                } else if (i < floor(boardSize * boardSize / 2.0) + 1) {
-                    potentialTileVals.add(rand.nextInt(maxValue - 1) + 2);
-                    // the rest of the board is filled with multipliers
+                // 30% of the board is guaranteed to be a multiplier greater than 1
+                } else if (i < ceil(boardSize * boardSize * 7 / 25.0) + ceil(boardSize * boardSize * 0.3)) {
+                    int randVal = rand.nextInt(maxValue - 1) + 2;
+                    potentialTileVals.add(randVal);
+                // 40% of the board is 1s
                 } else {
-                    potentialTileVals.add(rand.nextInt(maxValue) + 1);
+                    potentialTileVals.add(1);
                 }
             }
 
