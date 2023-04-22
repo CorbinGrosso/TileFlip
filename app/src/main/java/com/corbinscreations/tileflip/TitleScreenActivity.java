@@ -1,7 +1,6 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,7 +92,7 @@ public class TitleScreenActivity extends AppCompatActivity {
         makeButtons();
 
         // get option data handler to get volume for background music
-        OptionsDataHandler odh = null;
+        OptionsDataHandler odh;
         try {
             odh = new OptionsDataHandler(getApplicationContext());
         } catch (JSONException | IOException e) {

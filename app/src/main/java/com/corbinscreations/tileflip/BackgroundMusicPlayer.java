@@ -1,11 +1,7 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.app.Application;
 import android.media.MediaPlayer;
-
-import androidx.annotation.Nullable;
-
-import java.io.IOException;
 
 public class BackgroundMusicPlayer extends Application {
     private MediaPlayer mediaPlayer;
@@ -16,10 +12,6 @@ public class BackgroundMusicPlayer extends Application {
         mediaPlayer = MediaPlayer.create(this, R.raw.tileflip_background_music);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
-    }
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
     }
 
     public void pause() {

@@ -1,4 +1,4 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import static java.lang.Math.min;
 
@@ -12,8 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -80,7 +78,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         Board board;
         try {
             board = new Board(this, boardLayout, getApplicationContext(), (int) (screenHeight * 0.25));
-        } catch (JSONException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         board.draw();
@@ -151,7 +149,7 @@ public class HowToPlayActivity extends AppCompatActivity {
 
         try {
             drawToolbox(toolboxLayout, (int)(screenHeight * 0.25));
-        } catch (JSONException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -250,7 +248,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         pages[pageIndex].addView(text);
     }
 
-    private void drawToolbox(RelativeLayout layout, int height) throws JSONException, IOException {
+    private void drawToolbox(RelativeLayout layout, int height) throws IOException {
 
         // Label the section of the screen as the Toolbox
         TextView text = new TextView(this);

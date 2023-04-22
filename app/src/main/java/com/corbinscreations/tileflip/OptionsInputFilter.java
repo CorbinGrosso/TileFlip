@@ -1,4 +1,4 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.text.InputFilter;
 import android.text.Spanned;

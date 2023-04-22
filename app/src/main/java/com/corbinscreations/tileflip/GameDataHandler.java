@@ -1,17 +1,14 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class GameDataHandler extends DataHandler {
 

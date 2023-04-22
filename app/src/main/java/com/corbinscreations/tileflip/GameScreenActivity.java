@@ -1,4 +1,4 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import static java.lang.Math.min;
 
@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class GameScreenActivity extends AppCompatActivity {
     private int totalScore = 0, roundScore = 0;

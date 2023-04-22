@@ -1,10 +1,6 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.view.View;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class TileOnClickListener implements View.OnClickListener {
 

@@ -1,4 +1,4 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,7 +17,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 public class Tile {
 

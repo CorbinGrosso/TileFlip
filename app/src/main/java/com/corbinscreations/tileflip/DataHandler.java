@@ -1,4 +1,4 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import android.content.Context;
 
@@ -34,7 +34,7 @@ public class DataHandler {
         return new JSONObject(response);
     }
 
-    public void storeData(@NonNull Context context, JSONObject json, String filename) throws JSONException, IOException {
+    public void storeData(@NonNull Context context, JSONObject json, String filename) throws IOException {
 
         // Turn JSON object into string to be written to file
         String jsonString = json.toString();

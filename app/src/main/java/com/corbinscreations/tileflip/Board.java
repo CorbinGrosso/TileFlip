@@ -1,11 +1,9 @@
-package com.myproject.tileflip;
+package com.corbinscreations.tileflip;
 
 import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 import static java.lang.Math.min;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Random;
 
 import android.content.Context;
@@ -117,7 +115,7 @@ public class Board {
         gdh.storeData(context);
     }
 
-    public Board(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int height) throws JSONException, IOException {
+    public Board(HowToPlayActivity activity, RelativeLayout parentLayout, Context context, int height) throws IOException {
 
         boardSize = 3;
         tiles = new Tile[boardSize][boardSize];
