@@ -10,7 +10,22 @@
         android:orientation="vertical"
         android:background="@color/background_color"
         android:fitsSystemWindows="true"
-        android:clipToPadding="false" />
+        android:clipToPadding="false">
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        <!-- adUnitId for testing: ca-app-pub-3940256099942544/6300978111 -->
+        <!-- adUnitId for publishing: ca-app-pub-3565112723096467/8846179411 -->
+    </com.google.android.gms.ads.AdView>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/htp_board_layout"

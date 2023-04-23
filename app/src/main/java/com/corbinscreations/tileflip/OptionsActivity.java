@@ -1,12 +1,16 @@
 package com.corbinscreations.tileflip;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,6 +18,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import org.json.JSONException;
 
@@ -25,6 +35,18 @@ public class OptionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options_screen);
+
+        // Initialize Google Admobs
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Load ad
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
@@ -90,6 +112,8 @@ public class OptionsActivity extends AppCompatActivity {
         layoutParams = new RelativeLayout.LayoutParams(textSize * 3, textSize * 5);
         layoutParams.setMargins(0, (int)(screenHeight * 0.2), (int)(screenWidth * 0.05), 0);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
         editText.setLayoutParams(layoutParams);
         parentLayout.addView(editText);
 
@@ -117,6 +141,8 @@ public class OptionsActivity extends AppCompatActivity {
         layoutParams = new RelativeLayout.LayoutParams(textSize * 3, textSize * 5);
         layoutParams.setMargins(0, (int)(screenHeight * 0.35), (int)(screenWidth * 0.05), 0);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
         editText.setLayoutParams(layoutParams);
         parentLayout.addView(editText);
 
@@ -167,7 +193,7 @@ public class OptionsActivity extends AppCompatActivity {
         ImageView img = new ImageView(this);
         img.setImageResource(R.drawable.left_arrow);
         layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.1), (int)(screenHeight * 0.1));
-        layoutParams.setMargins((int)(screenWidth * 0.05), 0, 0, (int)(screenHeight * 0.01));
+        layoutParams.setMargins((int)(screenWidth * 0.05), 0, 0, (int)(screenHeight * 0.05));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
 

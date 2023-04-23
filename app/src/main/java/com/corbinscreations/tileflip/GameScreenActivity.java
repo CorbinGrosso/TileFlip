@@ -13,6 +13,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -35,6 +41,18 @@ public class GameScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_screen);
+
+        // Initialize Google Admobs
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Load ad
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
@@ -348,7 +366,7 @@ public class GameScreenActivity extends AppCompatActivity {
         text.setTextColor(getColor(R.color.text_color));
         text.setTextSize(textSize);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenHeight * 0.1));
-        layoutParams.setMargins((int)(screenWidth * 0.025), 0, 0, (int)(tileSize * 1.75 + textSize));
+        layoutParams.setMargins((int)(screenWidth * 0.025), 0, 0, (int)(tileSize * 1.75 + textSize) + (int)(screenHeight * 0.1));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         text.setLayoutParams(layoutParams);
         memoLayout.addView(text);
@@ -370,7 +388,7 @@ public class GameScreenActivity extends AppCompatActivity {
         img.setId(memoIDs[val]);
         img.setImageResource(R.drawable.tile);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize, tileSize);
-        layoutParams.setMargins(x, 0, 0, y);
+        layoutParams.setMargins(x, 0, 0, y + (int)(screenHeight * 0.1));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {
@@ -443,7 +461,7 @@ public class GameScreenActivity extends AppCompatActivity {
         img.setId(flipButtonID);
         img.setImageResource(R.drawable.tile_flip_button_pressed);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(tileSize * 2.25), (int)(tileSize * 2.25));
-        layoutParams.setMargins(x, 0, (int)(tileSize * 0.5), y);
+        layoutParams.setMargins(x, 0, (int)(tileSize * 0.5), y + (int)(screenHeight * 0.1));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {

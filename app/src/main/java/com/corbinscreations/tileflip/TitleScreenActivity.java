@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -27,6 +33,18 @@ public class TitleScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.title_screen);
+
+        // Initialize Google Admobs
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Load ad
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
@@ -134,7 +152,7 @@ public class TitleScreenActivity extends AppCompatActivity {
             img = new ImageView(this);
             img.setImageResource(R.drawable.title_screen_button);
             layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
-            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.4), 0, 0);
+            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.375), 0, 0);
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
             img.setLayoutParams(layoutParams);
 
@@ -158,7 +176,7 @@ public class TitleScreenActivity extends AppCompatActivity {
             text.setGravity(Gravity.CENTER);
             layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.4), 0, 0);
+            layoutParams.setMargins(0, (int)(screenHeight * 0.15 * (i + 1) + screenHeight * 0.375), 0, 0);
             text.setLayoutParams(layoutParams);
             parentLayout.addView(text);
         }
@@ -280,7 +298,7 @@ public class TitleScreenActivity extends AppCompatActivity {
         img = new ImageView(this);
         img.setImageResource(R.drawable.title_screen_button);
         layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
-        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.375), 0, 0);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         img.setLayoutParams(layoutParams);
         img.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +318,7 @@ public class TitleScreenActivity extends AppCompatActivity {
         text.setGravity(Gravity.CENTER);
         layoutParams = new RelativeLayout.LayoutParams((int)(screenWidth * 0.8), (int)(screenHeight * 0.15));
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        layoutParams.setMargins(0, (int)(screenHeight * 0.4), 0, 0);
+        layoutParams.setMargins(0, (int)(screenHeight * 0.375), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
     }
