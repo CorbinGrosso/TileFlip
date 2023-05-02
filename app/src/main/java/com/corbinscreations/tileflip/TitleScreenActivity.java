@@ -46,6 +46,19 @@ public class TitleScreenActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        // get option data handler to get volume for background music
+        OptionsDataHandler odh;
+        try {
+            odh = new OptionsDataHandler(getApplicationContext());
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        int volume = odh.getVolume();
+
+        // Load Background Music and set the volume
+        bmp = (BackgroundMusicPlayer) getApplication();
+        bmp.setVolume(volume);
+
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new NavVisibilityListener(this));
@@ -108,19 +121,6 @@ public class TitleScreenActivity extends AppCompatActivity {
 
         // Create all of the buttons on the screen except the start button
         makeButtons();
-
-        // get option data handler to get volume for background music
-        OptionsDataHandler odh;
-        try {
-            odh = new OptionsDataHandler(getApplicationContext());
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        int volume = odh.getVolume();
-
-        // set the volume of the background music
-        bmp = (BackgroundMusicPlayer) getApplication();
-        bmp.setVolume(volume);
     }
 
     public void onPause() {

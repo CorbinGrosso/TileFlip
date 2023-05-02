@@ -87,7 +87,7 @@ public class StatisticsActivity extends AppCompatActivity {
         text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
-        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.2), 0, 0);
+        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.175), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 
@@ -106,7 +106,7 @@ public class StatisticsActivity extends AppCompatActivity {
         text.setTextSize(textSize);
         text.setTextColor(getResources().getColor(R.color.text_color, null));
         layoutParams = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
-        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.3), 0, 0);
+        layoutParams.setMargins((int)(screenWidth * 0.05), (int)(screenHeight * 0.25), 0, 0);
         text.setLayoutParams(layoutParams);
         parentLayout.addView(text);
 

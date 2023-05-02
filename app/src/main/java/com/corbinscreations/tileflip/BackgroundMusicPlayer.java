@@ -9,6 +9,7 @@ public class BackgroundMusicPlayer extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // Create music player for the background music, make it loop, and start playing
         mediaPlayer = MediaPlayer.create(this, R.raw.tileflip_background_music);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();

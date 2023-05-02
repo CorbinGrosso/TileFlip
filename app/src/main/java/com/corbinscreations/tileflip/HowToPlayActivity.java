@@ -43,6 +43,9 @@ public class HowToPlayActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        // Load background music
+        bmp = (BackgroundMusicPlayer) getApplication();
+
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new NavVisibilityListener(this));
@@ -118,12 +121,12 @@ public class HowToPlayActivity extends AppCompatActivity {
 
         createText("This is a tile", 0, (int)(screenHeight * 0.25), 0, 0, 1);
 
-        Tile tile = new Tile(pages[1], getApplicationContext(), (int)(screenWidth * 0.5) - tileSize / 2, (int)(screenHeight * 0.4), tileSize, 0);
+        Tile tile = new Tile(pages[1], getApplicationContext(), (int)(screenWidth * 0.5) - tileSize / 2, (int)(screenHeight * 0.325), tileSize, 0);
         tile.draw();
 
-        createText("Hidden underneath it is a points multiplier", 0, (int)(screenHeight * 0.5), 0, 0, 1);
-        createText("If that multiplier is 0 (a bomb), it's game over", 0, (int)(screenHeight * 0.65), 0, 0, 1);
-        createText("Flip over every value greater than 1 to clear the board!", 0, (int)(screenHeight * 0.8), 0, 0, 1);
+        createText("Hidden underneath it is a points multiplier", 0, (int)(screenHeight * 0.4), 0, 0, 1);
+        createText("If that multiplier is 0 (a bomb), it's game over", 0, (int)(screenHeight * 0.55), 0, 0, 1);
+        createText("Flip over every value greater than 1 to clear the board!", 0, (int)(screenHeight * 0.7), 0, 0, 1);
 
 
         // Previous Page Button
@@ -330,8 +333,6 @@ public class HowToPlayActivity extends AppCompatActivity {
         text.setGravity(Gravity.CENTER);
         text.setLayoutParams(layoutParams);
         layout.addView(text);
-
-        bmp = (BackgroundMusicPlayer) getApplication();
     }
 
     public void onPause() {
@@ -346,7 +347,7 @@ public class HowToPlayActivity extends AppCompatActivity {
 
     private void createPageNumber(int pageIndex) {
         String str = "" + (pageIndex + 1) + " / 4";
-        createText(str, 0, (int)(screenHeight * 0.95), 0, 0, pageIndex);
+        createText(str, 0, (int)(screenHeight * 0.9), 0, 0, pageIndex);
     }
 
 }

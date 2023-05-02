@@ -18,11 +18,11 @@ public class GameDataHandler extends DataHandler {
     private final String filename = "gameData",
             totalScoreString = "Total Score",
             roundScoreString = "Round Score",
-    continueString = "Continue",
-    gameOverString = "Game Over",
-    boardSizeString = "Board Size",
-    highestValueMultiplierString = "Highest Value Multiplier",
-    tileValString = "Tile Val";
+            continueString = "Continue",
+            gameOverString = "Game Over",
+            boardSizeString = "Board Size",
+            highestValueMultiplierString = "Highest Value Multiplier",
+            tileValString = "Tile Val";
 
     public GameDataHandler(Context context) throws JSONException, IOException {
         loadData(context);

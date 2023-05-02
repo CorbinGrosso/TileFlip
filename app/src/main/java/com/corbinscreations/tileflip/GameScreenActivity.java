@@ -54,6 +54,9 @@ public class GameScreenActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        // Load background music
+        bmp = (BackgroundMusicPlayer) getApplication();
+
         // Hide navigation bar
         View decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new NavVisibilityListener(this));
@@ -126,8 +129,6 @@ public class GameScreenActivity extends AppCompatActivity {
         } catch (JSONException | IOException e) {
             throw new RuntimeException(e);
         }
-
-        bmp = (BackgroundMusicPlayer) getApplication();
     }
 
     public void onPause() {
